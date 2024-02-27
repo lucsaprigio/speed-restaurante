@@ -1,7 +1,7 @@
 import { ScrollView, Text, View } from "react-native";
-import { TableCard } from "./components/table-card";
+import { TableCard } from "../../components/table-card";
 import { useRouter } from "expo-router";
-import { SignedHeader } from "./components/signed-header";
+import { SignedHeader } from "../../components/signed-header";
 
 export default function Tables() {
     const router = useRouter();

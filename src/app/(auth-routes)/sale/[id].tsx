@@ -1,12 +1,12 @@
-import { FlatList, SectionList, Text, TouchableOpacity } from "react-native";
+import { FlatList, Text, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import colors from "tailwindcss/colors";
-import { Product } from "../components/product";
-import { CategoryButton } from "../components/category-button";
+import { Product } from "../../../components/product";
+import { CategoryButton } from "../../../components/category-button";
 import { ProductDTO } from "@/DTO/ProductDTO";
 
 export default function Sale() {
@@ -92,6 +92,11 @@ export default function Sale() {
         return router.back();
     }
 
+    function handleEditProduct(id: string) {
+        console.log(id);
+        router.push(`/product/${id}`)
+    }
+
     function handleCategorySelect(selectedCategory: string) {
         setCategory(selectedCategory);
 
@@ -169,8 +174,7 @@ export default function Sale() {
                 data={filteredProducts}
                 keyExtractor={(product) => product.id}
                 renderItem={(product) => (
-                    <Product title={product.item.title} subtitle={product.item.subtitle} price={product.item.price} />
-
+                    <Product title={product.item.title} subtitle={product.item.subtitle} price={product.item.price} action={() => handleEditProduct(product.item.id)} quantity="0"/>
                 )}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 100 }}

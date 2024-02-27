@@ -27,7 +27,7 @@ function Button({ children, ...rest }: ButtonProps) {
 
 function ButtonText({ children }: ButtonTextProps) {
     return (
-        <Text className="text-lg font-body text-gray-50">{children}</Text>
+        <Text className="text-lg font-body text-gray-50 mr-4">{children}</Text>
     )
 }
 
