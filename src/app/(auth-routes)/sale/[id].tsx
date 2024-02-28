@@ -8,6 +8,8 @@ import colors from "tailwindcss/colors";
 import { Product } from "../../../components/product";
 import { CategoryButton } from "../../../components/category-button";
 import { ProductDTO } from "@/DTO/ProductDTO";
+import { products } from "@/app/utils/data/products";
+import { categories } from "@/app/utils/data/categories";
 
 export default function Sale() {
     const router = useRouter();
@@ -31,56 +33,6 @@ export default function Sale() {
         },
     ]
 
-    const categories = [
-        {
-            id: 1,
-            name: 'Lanches'
-        },
-        {
-            id: 2,
-            name: 'Pizzas'
-        },
-        {
-            id: 3,
-            name: 'Bebidas'
-        },
-        {
-            id: 4,
-            name: 'Porções'
-        },
-    ]
-
-    const products: ProductDTO[] = [
-        {
-            id: '1',
-            title: 'X-total',
-            subtitle: 'X-total',
-            price: '19.99',
-            category: 'Lanches'
-        },
-        {
-            id: '2',
-            title: 'Pizza',
-            subtitle: 'Pizza',
-            price: '19.99',
-            category: 'Pizzas'
-        },
-        {
-            id: '3',
-            title: 'Coca-cola',
-            subtitle: 'Coca-cola',
-            price: ' 7.00',
-            category: 'Bebidas'
-        },
-        {
-            id: '4',
-            title: 'Porção',
-            subtitle: 'Porção',
-            price: '19.99',
-            category: 'Porções'
-        },
-    ]
-
     const [saleId, setSaleId] = useState('');
     const [lastSaleId, setLastSaleId] = useState<Number | any>();
     const [category, setCategory] = useState('');
@@ -93,7 +45,6 @@ export default function Sale() {
     }
 
     function handleEditProduct(id: string) {
-        console.log(id);
         router.push(`/product/${id}`)
     }
 
@@ -174,7 +125,7 @@ export default function Sale() {
                 data={filteredProducts}
                 keyExtractor={(product) => product.id}
                 renderItem={(product) => (
-                    <Product title={product.item.title} subtitle={product.item.subtitle} price={product.item.price} action={() => handleEditProduct(product.item.id)} quantity="0"/>
+                    <Product title={product.item.title} subtitle={product.item.subtitle} price={product.item.price} action={() => handleEditProduct(product.item.id)} quantity="0" />
                 )}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 100 }}

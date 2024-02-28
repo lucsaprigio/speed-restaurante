@@ -2,36 +2,10 @@ import { ScrollView, Text, View } from "react-native";
 import { TableCard } from "../../components/table-card";
 import { useRouter } from "expo-router";
 import { SignedHeader } from "../../components/signed-header";
+import { tables } from "../utils/data/tables";
 
 export default function Tables() {
     const router = useRouter();
-
-    const tables = [
-        {
-            id: '1',
-            busy: false
-        },
-        {
-            id: '2',
-            busy: false
-        },
-        {
-            id: '3',
-            busy: false
-        },
-        {
-            id: '4',
-            busy: false
-        },
-        {
-            id: '5',
-            busy: false
-        },
-        {
-            id: '6',
-            busy: false
-        }
-    ]
 
     function handleOpenSale(id: string) {
         return router.push(`/sale/${id}`)
