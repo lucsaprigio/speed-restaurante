@@ -1,40 +1,53 @@
+import { useCartStore } from "@/app/store/product-cart";
 import { products } from "@/app/utils/data/products";
+import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { Button } from "@/components/button";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useEffect, useState } from "react";
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import colors from "tailwindcss/colors";
 
 export default function Product() {
-    const router = useRouter();
+    const navigation = useNavigation();
     const { id } = useLocalSearchParams();
+    const cartStore = useCartStore();
 
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(1);
+    const [total, setTotal] = useState(0);
 
     const product = products.find((item) => item.id === id);
-
-    console.log(product);
+    const productPrice = formatCurrency(product?.price);
 
     function handleGoBack() {
-        return router.back();
+        return navigation.goBack();
     }
 
+
     function handleAddQuantityProduct() {
-        if (quantity >= 0) {
-            setQuantity(quantity + 1);
-        }
+        setQuantity(prevQuantity => prevQuantity + 1);
+        setTotal(Number(product?.price) * quantity);
     }
 
     function handleRemoveQuantityProduct() {
-        if (quantity === 0) {
-            setQuantity(0);
-        } else {
-            setQuantity(quantity - 1)
+
+        setQuantity(prevQuantity => prevQuantity > 0 ? prevQuantity - 1 : 0);
+        setTotal(Number(product?.price) * quantity);
+    }
+
+    function handleAddToCart() {
+        if (product) {
+            cartStore.add({ ...product, quantity });
+            console.log({ ...product, quantity })
+            navigation.goBack();
         }
     }
 
+    useEffect(() => {
+        setTotal(Number(product?.price) * quantity);
+    }, [product, quantity]);
 
     return (
         <>
@@ -54,7 +67,7 @@ export default function Product() {
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget mauris diam. Sed ut tincidunt risus.
                     </Text>
                     <Text className="text-gray-500 font-heading">
-                        R$ {product?.price}
+                        {productPrice}
                     </Text>
                 </View>
 
@@ -82,9 +95,9 @@ export default function Product() {
                     </TouchableOpacity>
                 </View>
                 <View className="items-center justify-center px-8">
-                    <Button>
+                    <Button onPress={handleAddToCart}>
                         <Button.Text>
-                            Adicionar R$ { }
+                            Adicionar R$ {total.toFixed(2)}
                         </Button.Text>
 
                         <Button.Icon>

@@ -22,9 +22,12 @@ export function Product({ id, price, title, subtitle, quantity, add, remove, act
                 </View>
             </View>
             <View>
-                <Text>
-                    {quantity}
-                </Text>
+                {
+                    quantity !== '0' && (
+                        <Text className="text-green-600">
+                            {quantity} Adicionado(s) ao pedido!
+                        </Text>
+                    )}
             </View>
         </TouchableOpacity>
     )

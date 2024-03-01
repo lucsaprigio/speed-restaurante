@@ -1,18 +1,21 @@
 import { FlatList, Text, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import colors from "tailwindcss/colors";
 import { Product } from "../../../components/product";
 import { CategoryButton } from "../../../components/category-button";
-import { ProductDTO } from "@/DTO/ProductDTO";
-import { products } from "@/app/utils/data/products";
+import { ProductProps, products } from "@/app/utils/data/products";
 import { categories } from "@/app/utils/data/categories";
+import { useCartStore } from "@/app/store/product-cart";
+import { SaleCart } from "@/components/sale-cart";
+import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 
 export default function Sale() {
     const router = useRouter();
+    const cartStore = useCartStore();
     const { id } = useLocalSearchParams();
 
     const sales = [
@@ -36,9 +39,9 @@ export default function Sale() {
     const [saleId, setSaleId] = useState('');
     const [lastSaleId, setLastSaleId] = useState<Number | any>();
     const [category, setCategory] = useState('');
-    const [productList, setProductList] = useState<ProductDTO[]>([]);
+    const [productList, setProductList] = useState<ProductProps[]>([]);
 
-    const [filteredProducts, setFilteredProducts] = useState<ProductDTO[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<ProductProps[]>([]);
 
     function handleGoBack() {
         return router.back();
@@ -63,6 +66,10 @@ export default function Sale() {
         setLastSaleId(lastSale.id + 1);
     }
 
+    function handleCloseSale(saleId: string, id: string | any) {
+        router.push({ pathname: `/sale/close-sale/`, params: { saleId, id } });
+    }
+
     useEffect(() => {
         setSaleId(id.toString());
         handleGetLastSaleId();
@@ -83,10 +90,12 @@ export default function Sale() {
                     <Text className="text-gray-200">
                         Mesa {saleId}
                     </Text>
-                    <View></View>
+                    <View>
+                        <SaleCart quantity={cartStore.products.length} onPress={() => { handleCloseSale(lastSaleId, id) }} />
+                    </View>
                 </View>
             </SafeAreaView>
-            <View className="w-full m-3 px-2 items-center justify-center">
+            <View className="flex w-full px-2 py-2 mb-10 items-center justify-center border-[1px]">
                 <FlatList
                     data={categories}
                     keyExtractor={(item) => item.name}
@@ -98,13 +107,13 @@ export default function Sale() {
                         />
                     )}
                     horizontal
-                    className="max-h-10 mt-5"
+                    className="max-h-10"
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ gap: 12, paddingHorizontal: 20 }}
                 />
             </View>
 
-            <View className="m-3 flex items-start">
+            <View className="m-1 flex items-start">
                 {category &&
                     <TouchableOpacity
                         className="flex flex-row items-center justify-center bg-gray-500 p-2 rounded-md"
@@ -124,9 +133,19 @@ export default function Sale() {
                 className="flex-1 p-5"
                 data={filteredProducts}
                 keyExtractor={(product) => product.id}
-                renderItem={(product) => (
-                    <Product title={product.item.title} subtitle={product.item.subtitle} price={product.item.price} action={() => handleEditProduct(product.item.id)} quantity="0" />
-                )}
+                renderItem={(product) => {
+                    const productInCart = cartStore.products.find(cartItem => cartItem.id === product.item.id);
+                    const quantityInCart = productInCart ? productInCart.quantity : 0;
+                    return (
+                        <Product
+                            title={product.item.title}
+                            subtitle={product.item.subtitle}
+                            price={formatCurrency(product.item.price)}
+                            action={() => handleEditProduct(product.item.id)}
+                            quantity={quantityInCart.toString()} />
+                    )
+                }
+                }
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 100 }}
             />

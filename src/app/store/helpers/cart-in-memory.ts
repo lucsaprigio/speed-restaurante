@@ -1,14 +1,7 @@
+import { ProductDTO } from '@/DTO/ProductDTO';
 import { ProductCartProps } from '../product-cart';
 
-export type ProductPropsMemory = {
-    id?: string;
-    title?: string;
-    subtitle?: string;
-    price?: string;
-    category?: string;
-}
-
-export function add(products: ProductCartProps[], newProduct: ProductPropsMemory) {
+export function add(products: ProductCartProps[], newProduct: ProductDTO) {
     const existingProduct = products.find(({ id }) => newProduct.id === id);
 
     if (existingProduct) {
