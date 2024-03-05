@@ -10,6 +10,7 @@ import { Loading } from "@/components/loading";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { BackHandler } from "react-native";
+import { AppProvider } from "./hooks";
 
 // Carregar as fontes antes de iniciar a aplicação
 // Obs: Temos que configurar dentro do tailwind.config.js no extend, para fazer junção as fontes com tailwindcss
@@ -37,9 +38,9 @@ export default function Layout() {
   }
 
   return (
-    <>
+    <AppProvider>
       <StatusBar translucent backgroundColor="transparent" />
       <Slot />
-    </>
+    </AppProvider>
   )
 }

@@ -1,14 +1,16 @@
 import { formatDate } from "@/app/utils/dateFormatted";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, TouchableOpacityProps, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import AvatarImg from '@/assets/avatar.png';
 
 import colors from "tailwindcss/colors";
 
-export function SignedHeader() {
+type SignedHeaderProps = TouchableOpacityProps & {}
+
+export function SignedHeader({ ...rest }: SignedHeaderProps) {
     const [day, setDay] = useState(0);
     const [weekDay, setWeekday] = useState('');
     const [month, setMonth] = useState('');
@@ -37,7 +39,7 @@ export function SignedHeader() {
                     <Text className="text-sm text-gray-100">{weekDay}, {day} de {month}</Text>
                 </View>
             </View>
-            <TouchableOpacity className="flex items-center justify-center">
+            <TouchableOpacity className="flex items-center justify-center" {...rest}>
                 <Feather name="log-out" size={28} color={colors.gray[100]} />
             </TouchableOpacity>
         </SafeAreaView>

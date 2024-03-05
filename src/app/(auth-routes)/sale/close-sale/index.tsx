@@ -3,7 +3,7 @@ import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { Button } from "@/components/button";
 import { ProductInCart } from "@/components/protuct-in-cart";
 import { Feather } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter, useGlobalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -25,14 +25,16 @@ export default function CloseSale() {
     }
 
     function handleCloseSale() {
-        Alert.alert("Fechamento", 'Fechar Pedido?', [
+        Alert.alert("Fechamento", 'Enviar à Cozinha?', [
             {
                 text: "Cancelar"
             },
             {
                 text: "Fechar Pedido",
                 onPress: () => {
+                    // Aqui vai as funções da rota que vou criar
                     console.log({ ...cartStore, total })
+                    console.log({ id });
                     cartStore.clear();
                     router.push('/(auth-routes)/');
                 }

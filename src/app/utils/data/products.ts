@@ -32,6 +32,27 @@ export const products: ProductDTO[] = [
     },
     {
         id: '4',
+        title: 'Guaraná',
+        subtitle: 'Guaraná',
+        price: 19.99,
+        category: 'Bebidas'
+    },
+    {
+        id: '5',
+        title: 'X-bacon',
+        subtitle: 'X-bacon',
+        price: 19.99,
+        category: 'Lanches'
+    },
+    {
+        id: '6',
+        title: 'Alcatra com fritas',
+        subtitle: 'Porção',
+        price: 19.99,
+        category: 'Porções'
+    },
+    {
+        id: '7',
         title: 'Porção',
         subtitle: 'Porção',
         price: 19.99,
