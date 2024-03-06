@@ -23,7 +23,7 @@ export default function SignIn() {
             const response = await axios.get('http://localhost:3333/users');
             console.log(response.data)
 
-            setUserId(response.data)
+            // setUserId(response.data)
         }
 
         handleGetUsers()
