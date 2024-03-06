@@ -13,6 +13,7 @@ export default function Home() {
         return router.push('/signin/')
     }
 
+    //Alteração
     return (
         <>
             <Header title="Cadastrar Aparelho" icon />
