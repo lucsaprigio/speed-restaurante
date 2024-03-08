@@ -8,11 +8,11 @@ import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
 import { User } from "@/DTO/UserDTO";
-import axios from "axios";
 
 export default function SignIn() {
     const router = useRouter();
-    const [userId, setUserId] = useState({} as User[]);
+    const [userId, setUserId] = useState('');
+    const [users, setUsers] = useState<User[]>([]);
 
     function handleSignIn() {
         return router.push('/(auth-routes)/')
@@ -20,10 +20,11 @@ export default function SignIn() {
 
     useEffect(() => {
         async function handleGetUsers() {
-            const response = await axios.get('http://localhost:3333/users');
+            const response = await api.get('/users');
             console.log(response.data)
 
-            // setUserId(response.data)
+            setUsers(response.data);
+            setUserId(response.data.CD_OPERADOR);
         }
 
         handleGetUsers()
@@ -40,7 +41,21 @@ export default function SignIn() {
                 </Text>
             </View>
             <View className="items-center justify-center mt-8">
-
+                <Picker
+                    mode="dialog"
+                    selectedValue={userId}
+                    onValueChange={(item: string) => {
+                        setUserId(item)
+                    }}
+                    placeholder="Selecione o operador"
+                    className="w-full"
+                >
+                    {
+                        users.map((user) => (
+                            <Picker.Item key={user.CD_OPERADOR} label={user.NOME_OPERADOR} value={user.CD_OPERADOR} />
+                        ))
+                    }
+                </Picker>
                 <Input placeholder="Senha" inputPassword />
             </View>
             <View className="w-full px-8 mt-10">

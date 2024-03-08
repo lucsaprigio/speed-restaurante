@@ -1,5 +1,5 @@
 export type User = {
-    userId: string;
-    name: string;
-    password: string;
+    CD_OPERADOR: string;
+    NOME_OPERADOR: string;
+    SENHA_OPERADOR: string;
 }
