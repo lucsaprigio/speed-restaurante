@@ -12,14 +12,15 @@ export default function Tables() {
     }
 
     function handleLogout() {
-        return Alert.alert('Logoff', 'Deseja fazer logoff?', [
+        return Alert.alert('Logoff', 'Deseja sair?', [
             {
                 text: 'Não'
             },
             {
-                text: 'Fazer logoff',
+                text: 'Sair',
                 onPress: () => {
-                    console.log('Logof');
+                    router.push('/signin/');
+
                 }
             }
         ])

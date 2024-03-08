@@ -43,6 +43,7 @@ function AuthProvider({ children }: AuthProviderProps) {
             await SecureStore.setItemAsync('app_token', JSON.stringify(response.data.user.token));
 
             setData(response.data.user);
+            router.push('/(auth-routes)/');
         } catch (err) {
             Alert.alert('Usuário ou senha incorretos');
         }
