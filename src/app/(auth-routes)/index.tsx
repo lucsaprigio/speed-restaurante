@@ -2,13 +2,29 @@ import { Alert, ScrollView, Text, View } from "react-native";
 import { TableCard } from "../../components/table-card";
 import { useRouter } from "expo-router";
 import { SignedHeader } from "../../components/signed-header";
-import { tables } from "../utils/data/tables";
+import { api } from "../api/api";
+import { useEffect, useState } from "react";
+import { Table } from "@/DTO/TableDTO";
 
 export default function Tables() {
     const router = useRouter();
 
+    const [tables, setTables] = useState<Table[]>([]);
+
     function handleOpenSale(id: string) {
         return router.push(`/sale/${id}`)
+    }
+
+    async function handleGetTables() {
+        try {
+            const response = await api.get('/tables');
+
+            setTables(response.data);
+            console.log(tables)
+            console.log(response.data)
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     function handleLogout() {
@@ -26,6 +42,10 @@ export default function Tables() {
         ])
     }
 
+    useEffect(() => {
+        handleGetTables();
+    }, [])
+
     return (
         <>
             <SignedHeader onPress={handleLogout} />
@@ -35,7 +55,7 @@ export default function Tables() {
                 <View className="flex flex-row flex-wrap gap-1 items-center justify-center">
                     {
                         tables.map((table) => (
-                            <TableCard key={table.id} busy={table.busy} id={table.id} onPress={() => handleOpenSale(table.id)} />
+                            <TableCard key={table.CD_MESA.toString()} busy={table.OCUPADA.toString()} id={table.CD_MESA} onPress={() => handleOpenSale(table.CD_MESA.toString())} />
                         ))
                     }
                 </View>

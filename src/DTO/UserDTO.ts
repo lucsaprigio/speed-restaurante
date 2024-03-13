@@ -1,5 +1,11 @@
 export type User = {
-    CD_OPERADOR: string;
-    NOME_OPERADOR: string;
-    SENHA_OPERADOR: string;
+    userId: string;
+    name: string;
+    password: string;
+    token: string;
+}
+
+export type UserList = {
+    USERID: string;
+    NAME: string;
 }

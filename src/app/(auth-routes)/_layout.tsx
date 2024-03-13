@@ -4,7 +4,8 @@ import { transparent } from "tailwindcss/colors";
 import { useAuth } from "../hooks/auth";
 
 export default function AppLayout() {
-    const { isLogged } = useAuth();
+    const { isLogged, user } = useAuth();
+    console.log(user);
 
     if (!isLogged) {
         return <Redirect href="/" />

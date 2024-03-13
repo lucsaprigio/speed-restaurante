@@ -7,10 +7,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AvatarImg from '@/assets/avatar.png';
 
 import colors from "tailwindcss/colors";
+import { useAuth } from "@/app/hooks/auth";
 
 type SignedHeaderProps = TouchableOpacityProps & {}
 
 export function SignedHeader({ ...rest }: SignedHeaderProps) {
+    const { user } = useAuth();
+
     const [day, setDay] = useState(0);
     const [weekDay, setWeekday] = useState('');
     const [month, setMonth] = useState('');
@@ -35,7 +38,7 @@ export function SignedHeader({ ...rest }: SignedHeaderProps) {
                     <Image className="w-20 h-20" source={AvatarImg} resizeMode="contain" />
                 </TouchableOpacity>
                 <View>
-                    <Text className="text-lg font-subtitle text-gray-100">Olá, Usuário</Text>
+                    <Text className="text-lg font-subtitle text-gray-100">Olá, {user?.name}</Text>
                     <Text className="text-sm text-gray-100">{weekDay}, {day} de {month}</Text>
                 </View>
             </View>

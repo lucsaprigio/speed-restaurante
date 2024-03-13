@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
-import { User } from "@/DTO/UserDTO";
+import { User, UserList } from "@/DTO/UserDTO";
 import { Feather } from "@expo/vector-icons";
 import colors from "tailwindcss/colors";
 import { useAuth } from "../hooks/auth";
@@ -17,7 +17,7 @@ export default function SignIn() {
     const { signIn } = useAuth();
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<UserList[]>([]);
 
     function handleLogin(id: string, password: string) {
         if (password !== '') {
@@ -35,7 +35,8 @@ export default function SignIn() {
             const response = await api.get('/users');
 
             setUsers(response.data);
-            setUserId(response.data.CD_OPERADOR);
+            setUserId(response.data.USERID);
+
         }
 
         handleGetUsers()
@@ -64,7 +65,7 @@ export default function SignIn() {
                 >
                     {
                         users.map((user) => (
-                            <Picker.Item key={user.CD_OPERADOR} label={user.NOME_OPERADOR} value={user.CD_OPERADOR} />
+                            <Picker.Item key={user?.USERID} label={user.NAME} value={user.USERID} />
                         ))
                     }
                 </Picker>
