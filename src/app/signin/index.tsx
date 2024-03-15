@@ -22,7 +22,6 @@ export default function SignIn() {
     function handleLogin(id: string, password: string) {
         if (password !== '') {
             setUserId(id)
-            console.log(id, password)
             signIn({ userId: userId, password });
         } else {
             Alert.alert('Favor preencher a senha')
