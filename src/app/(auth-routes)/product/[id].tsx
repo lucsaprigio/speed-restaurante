@@ -1,3 +1,4 @@
+import { api } from "@/app/api/api";
 import { useCartStore } from "@/app/store/product-cart";
 import { products } from "@/app/utils/data/products";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
@@ -21,10 +22,19 @@ export default function Product() {
     const product = products.find((item) => item.id === id);
     const productPrice = formatCurrency(product?.price);
 
+    async function handleShowProduct(productId: string) {
+        try {
+            const response = await api.get(`/product/${productId}`);
+
+            console.log(response);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     function handleGoBack() {
         return navigation.goBack();
     }
-
 
     function handleAddQuantityProduct() {
         setQuantity(prevQuantity => prevQuantity + 1);
@@ -32,7 +42,6 @@ export default function Product() {
     }
 
     function handleRemoveQuantityProduct() {
-
         setQuantity(prevQuantity => prevQuantity > 0 ? prevQuantity - 1 : 0);
         setTotal(Number(product?.price) * quantity);
     }
@@ -47,6 +56,7 @@ export default function Product() {
 
     useEffect(() => {
         setTotal(Number(product?.price) * quantity);
+        handleShowProduct('1');
     }, [product, quantity]);
 
     return (

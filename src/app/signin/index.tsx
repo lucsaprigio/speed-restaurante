@@ -13,7 +13,6 @@ import colors from "tailwindcss/colors";
 import { useAuth } from "../hooks/auth";
 
 export default function SignIn() {
-    const router = useRouter();
     const { signIn } = useAuth();
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
@@ -34,7 +33,7 @@ export default function SignIn() {
             const response = await api.get('/users');
 
             setUsers(response.data);
-            setUserId(response.data.USERID);
+            setUserId(response.data.USERID)
 
         }
 

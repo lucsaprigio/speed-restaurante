@@ -12,6 +12,7 @@ import { categories } from "@/app/utils/data/categories";
 import { useCartStore } from "@/app/store/product-cart";
 import { SaleCart } from "@/components/sale-cart";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
+import { api } from "@/app/api/api";
 
 export default function Sale() {
     const router = useRouter();
@@ -43,6 +44,16 @@ export default function Sale() {
 
     const [filteredProducts, setFilteredProducts] = useState<ProductProps[]>([]);
 
+    async function handleListProducts() {
+        try {
+            const response = await api.get('/products');
+
+            console.log(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     function handleGoBack() {
         return router.back();
     }
@@ -50,6 +61,7 @@ export default function Sale() {
     function handleEditProduct(id: string) {
         router.push(`/product/${id}`)
     }
+
 
     function handleCategorySelect(selectedCategory: string) {
         setCategory(selectedCategory);
@@ -75,6 +87,7 @@ export default function Sale() {
         handleGetLastSaleId();
         setProductList(products);
         setFilteredProducts(products);
+        handleListProducts();
     }, []);
 
     return (
