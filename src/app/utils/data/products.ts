@@ -1,11 +1,10 @@
 import { ProductDTO } from "@/DTO/ProductDTO";
 
 export type ProductProps = {
-    id: string;
-    title: string;
-    subtitle: string;
-    price: number;
-    category: string;
+    CD_PRODUTO: string;
+    CD_CATEGORIA: string;
+    DESCRICAO_PRODUTO: string;
+    VR_UNITARIO: number;
 }
 
 export const products: ProductDTO[] = [

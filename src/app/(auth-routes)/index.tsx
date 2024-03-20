@@ -5,8 +5,10 @@ import { SignedHeader } from "../../components/signed-header";
 import { api } from "../api/api";
 import { useEffect, useState } from "react";
 import { Table } from "@/DTO/TableDTO";
+import { useAuth } from "../hooks/auth";
 
 export default function Tables() {
+    const { signOut } = useAuth();
     const router = useRouter();
 
     const [tables, setTables] = useState<Table[]>([]);
@@ -20,8 +22,6 @@ export default function Tables() {
             const response = await api.get('/tables');
 
             setTables(response.data);
-            console.log(tables)
-            console.log(response.data)
         } catch (err) {
             console.log(err);
         }
@@ -35,8 +35,7 @@ export default function Tables() {
             {
                 text: 'Sair',
                 onPress: () => {
-                    router.push('/signin/');
-
+                    signOut();
                 }
             }
         ])

@@ -1,16 +1,15 @@
-import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { Alert, Text, View } from "react-native";
+import { useAuth } from "../hooks/auth";
 
+import colors from "tailwindcss/colors";
+import { api } from "../api/api";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
-import { Alert, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
-import { useEffect, useState } from "react";
-import { api } from "../api/api";
-import { User, UserList } from "@/DTO/UserDTO";
+import { UserList } from "@/DTO/UserDTO";
 import { Feather } from "@expo/vector-icons";
-import colors from "tailwindcss/colors";
-import { useAuth } from "../hooks/auth";
 
 export default function SignIn() {
     const { signIn } = useAuth();
@@ -18,14 +17,13 @@ export default function SignIn() {
     const [password, setPassword] = useState('');
     const [users, setUsers] = useState<UserList[]>([]);
 
-    function handleLogin(id: string, password: string) {
+    async function handleLogin(userId: string, password: string) {
         if (password !== '') {
-            setUserId(id)
-            signIn({ userId: userId, password });
+            setUserId(userId)
+            await signIn({ userId, password });
         } else {
             Alert.alert('Favor preencher a senha')
         }
-
     }
 
     useEffect(() => {

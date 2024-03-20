@@ -1,23 +1,25 @@
 import { FlatList, Text, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
-import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import colors from "tailwindcss/colors";
 import { Product } from "../../../components/product";
 import { CategoryButton } from "../../../components/category-button";
-import { ProductProps, products } from "@/app/utils/data/products";
-import { categories } from "@/app/utils/data/categories";
 import { useCartStore } from "@/app/store/product-cart";
 import { SaleCart } from "@/components/sale-cart";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { api } from "@/app/api/api";
+import { ProductList } from "@/DTO/ProductDTO";
+import { Loading } from "@/components/loading";
+import { Category } from "@/DTO/CategoryDTO";
 
 export default function Sale() {
     const router = useRouter();
     const cartStore = useCartStore();
-    const { id } = useLocalSearchParams();
+    const {
+        id } = useLocalSearchParams();
 
     const sales = [
         {
@@ -40,17 +42,30 @@ export default function Sale() {
     const [saleId, setSaleId] = useState('');
     const [lastSaleId, setLastSaleId] = useState<Number | any>();
     const [category, setCategory] = useState('');
-    const [productList, setProductList] = useState<ProductProps[]>([]);
+    const [categoryList, setCategoryList] = useState<Category[]>([]);
+    const [productList, setProductList] = useState<ProductList[]>([]);
 
-    const [filteredProducts, setFilteredProducts] = useState<ProductProps[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<ProductList[]>([]);
 
     async function handleListProducts() {
         try {
             const response = await api.get('/products');
 
-            console.log(response.data);
+            setProductList(response.data);
         } catch (err) {
             console.log(err);
+        }
+    }
+
+    async function handleListCategories() {
+        try {
+            const response = await api.get('/categories');
+
+            setCategoryList(response.data);
+            console.log(categoryList)
+        } catch (err) {
+            console.log(err);
+
         }
     }
 
@@ -66,8 +81,7 @@ export default function Sale() {
     function handleCategorySelect(selectedCategory: string) {
         setCategory(selectedCategory);
 
-        const productsFiltered = productList.filter(product => selectedCategory === product.category);
-        console.log(productsFiltered)
+        const productsFiltered = productList.filter(product => selectedCategory === product.DESCRICAO_CATEGORIA);
 
         setFilteredProducts(productsFiltered);
     }
@@ -85,9 +99,10 @@ export default function Sale() {
     useEffect(() => {
         setSaleId(id.toString());
         handleGetLastSaleId();
-        setProductList(products);
-        setFilteredProducts(products);
+        setProductList(productList);
+        setFilteredProducts(productList);
         handleListProducts();
+        handleListCategories();
     }, []);
 
     return (
@@ -110,13 +125,13 @@ export default function Sale() {
             </SafeAreaView>
             <View className="flex w-full px-2 py-2 mb-10 items-center justify-center border-[1px]">
                 <FlatList
-                    data={categories}
-                    keyExtractor={(item) => item.name}
+                    data={categoryList}
+                    keyExtractor={(item) => item.CD_CATEGORIA}
                     renderItem={({ item }) => (
                         <CategoryButton
-                            title={item.name}
-                            isSelected={item.name === category}
-                            onPress={() => { handleCategorySelect(item.name) }}
+                            title={item.DESCRICAO_CATEGORIA}
+                            isSelected={item.DESCRICAO_CATEGORIA === category}
+                            onPress={() => { handleCategorySelect(item.DESCRICAO_CATEGORIA) }}
                         />
                     )}
                     horizontal
@@ -124,6 +139,7 @@ export default function Sale() {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ gap: 12, paddingHorizontal: 20 }}
                 />
+
             </View>
 
             <View className="m-1 flex items-start">
@@ -142,26 +158,33 @@ export default function Sale() {
                 }
             </View>
             <Text className="mx-5 border-b-[1px] text-gray-400 border-gray-400">Produtos</Text>
-            <FlatList
-                className="flex-1 p-5"
-                data={filteredProducts}
-                keyExtractor={(product) => product.id}
-                renderItem={(product) => {
-                    const productInCart = cartStore.products.find(cartItem => cartItem.id === product.item.id);
-                    const quantityInCart = productInCart ? productInCart.quantity : 0;
-                    return (
-                        <Product
-                            title={product.item.title}
-                            subtitle={product.item.subtitle}
-                            price={formatCurrency(product.item.price)}
-                            action={() => handleEditProduct(product.item.id)}
-                            quantity={quantityInCart.toString()} />
-                    )
-                }
-                }
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 100 }}
-            />
+            {
+                productList ? (
+                    <FlatList
+                        className="flex-1 p-5"
+                        data={filteredProducts}
+                        keyExtractor={(product) => product.CD_PRODUTO}
+                        renderItem={(product) => {
+                            const productInCart = cartStore.products.find(cartItem => cartItem.id === product.item.CD_PRODUTO);
+                            const quantityInCart = productInCart ? productInCart.quantity : 0;
+                            return (
+                                <Product
+                                    title={product.item.DESCRICAO_PRODUTO}
+                                    subtitle={product.item.DESCRICAO_PRODUTO}
+                                    price={formatCurrency(product.item.VR_UNITARIO)}
+                                    action={() => handleEditProduct(product.item.CD_PRODUTO)}
+                                    quantity={quantityInCart.toString()} />
+                            )
+                        }
+                        }
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{ paddingBottom: 100 }}
+                    />
+                ) : (
+                    <Loading />
+                )
+            }
+
         </>
     )
 }

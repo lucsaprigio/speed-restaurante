@@ -1,10 +1,12 @@
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 
 import { Button } from "@/components/button";
 import { Header } from "@/components/header";
 import { Input } from "@/components/input";
 import { View, Text } from "react-native";
-
+import { useAuth } from './hooks/auth';
+import { useEffect } from 'react';
+import * as SecureStore from 'expo-secure-store';
 
 export default function Home() {
     const router = useRouter();
@@ -12,6 +14,17 @@ export default function Home() {
     function handleRegister() {
         return router.push('/signin/')
     }
+
+    useEffect(() => {
+        async function getInfo() {
+            const user = await SecureStore.getItemAsync('app_user');
+
+            if (!!user) {
+                router.push('/(auth-routes)')
+            }
+        }
+        getInfo();
+    }, []);
 
     // Outra alteração
     return (

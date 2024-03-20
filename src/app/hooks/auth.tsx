@@ -1,9 +1,9 @@
 import { User } from '@/DTO/UserDTO';
-import { ReactNode, createContext, useContext, useState } from 'react';
+import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { Alert } from 'react-native';
 import { api } from '../api/api';
-import { useRouter } from 'expo-router';
+import { useRouter, useSegments, useRootNavigationState } from 'expo-router';
 
 type SigninCreadentials = {
     userId: string;
@@ -62,12 +62,33 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
     }
 
+    useEffect(() => {
+        async function loadStorageData() {
+            try {
+                const storagedUser = await SecureStore.getItemAsync('app_user');
+                const storagedToken = await SecureStore.getItemAsync('app_token');
+
+                if (storagedUser && storagedToken) {
+                    api.defaults.headers.common[
+                        "Authorization"
+                    ] = `Bearer ${storagedToken}`;
+                    const userLogged = JSON.parse(storagedUser);
+                    setData(userLogged);
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        loadStorageData()
+    }, []);
+
     return (
         <AuthContext.Provider value={{
             user: data,
             signIn,
             signOut,
-            isLogged: !!data
+            isLogged: !!data,
         }}>
             {children}
         </AuthContext.Provider>
