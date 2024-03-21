@@ -18,26 +18,7 @@ import { Category } from "@/DTO/CategoryDTO";
 export default function Sale() {
     const router = useRouter();
     const cartStore = useCartStore();
-    const {
-        id } = useLocalSearchParams();
-
-    const sales = [
-        {
-            id: 1,
-        },
-        {
-            id: 2,
-        },
-        {
-            id: 3,
-        },
-        {
-            id: 4,
-        },
-        {
-            id: 5,
-        },
-    ]
+    const { id } = useLocalSearchParams();
 
     const [saleId, setSaleId] = useState('');
     const [lastSaleId, setLastSaleId] = useState<Number | any>();
@@ -62,21 +43,19 @@ export default function Sale() {
             const response = await api.get('/categories');
 
             setCategoryList(response.data);
-            console.log(categoryList)
         } catch (err) {
             console.log(err);
 
         }
-    }
+    };
 
     function handleGoBack() {
         return router.back();
-    }
+    };
 
     function handleEditProduct(id: string) {
         router.push(`/product/${id}`)
-    }
-
+    };
 
     function handleCategorySelect(selectedCategory: string) {
         setCategory(selectedCategory);
@@ -84,22 +63,15 @@ export default function Sale() {
         const productsFiltered = productList.filter(product => selectedCategory === product.DESCRICAO_CATEGORIA);
 
         setFilteredProducts(productsFiltered);
-    }
+    };
 
-    function handleGetLastSaleId() {
-        const lastSale = sales[sales.length - 1];
-
-        setLastSaleId(lastSale.id + 1);
-    }
 
     function handleCloseSale(saleId: string, id: string | any) {
         router.push({ pathname: `/sale/close-sale/`, params: { saleId, id } });
-    }
+    };
 
     useEffect(() => {
         setSaleId(id.toString());
-        handleGetLastSaleId();
-        setProductList(productList);
         setFilteredProducts(productList);
         handleListProducts();
         handleListCategories();
@@ -109,7 +81,7 @@ export default function Sale() {
         <>
             <SafeAreaView className="flex py-4 px-3 mb-4 gap-3 bg-blue-950">
                 <View className="items-center">
-                    <Text className="text-2xl text-gray-200 font-heading">Pedido nº {lastSaleId}</Text>
+                    <Text className="text-2xl text-gray-200 font-heading">Novo pedido</Text>
                 </View>
                 <View className="flex flex-row items-center justify-between">
                     <TouchableOpacity activeOpacity={0.5} onPress={handleGoBack}>
@@ -158,32 +130,26 @@ export default function Sale() {
                 }
             </View>
             <Text className="mx-5 border-b-[1px] text-gray-400 border-gray-400">Produtos</Text>
-            {
-                productList ? (
-                    <FlatList
-                        className="flex-1 p-5"
-                        data={filteredProducts}
-                        keyExtractor={(product) => product.CD_PRODUTO}
-                        renderItem={(product) => {
-                            const productInCart = cartStore.products.find(cartItem => cartItem.id === product.item.CD_PRODUTO);
-                            const quantityInCart = productInCart ? productInCart.quantity : 0;
-                            return (
-                                <Product
-                                    title={product.item.DESCRICAO_PRODUTO}
-                                    subtitle={product.item.DESCRICAO_PRODUTO}
-                                    price={formatCurrency(product.item.VR_UNITARIO)}
-                                    action={() => handleEditProduct(product.item.CD_PRODUTO)}
-                                    quantity={quantityInCart.toString()} />
-                            )
-                        }
-                        }
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{ paddingBottom: 100 }}
-                    />
-                ) : (
-                    <Loading />
-                )
-            }
+            <FlatList
+                className="flex-1 p-5"
+                data={filteredProducts && productList}
+                keyExtractor={(product) => product.CD_PRODUTO}
+                renderItem={(product) => {
+                    const productInCart = cartStore.products.find(cartItem => cartItem.CD_PRODUTO === product.item.CD_PRODUTO);
+                    const quantityInCart = productInCart ? productInCart.quantity : 0;
+                    return (
+                        <Product
+                            title={product.item.DESCRICAO_PRODUTO}
+                            subtitle={product.item.DESCRICAO_PRODUTO}
+                            price={formatCurrency(product.item.VR_UNITARIO)}
+                            action={() => handleEditProduct(product.item.CD_PRODUTO)}
+                            quantity={quantityInCart.toString()} />
+                    )
+                }
+                }
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 100 }}
+            />
 
         </>
     )

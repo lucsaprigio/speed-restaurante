@@ -1,3 +1,4 @@
+import { ProductList } from "@/DTO/ProductDTO";
 import { api } from "@/app/api/api";
 import { useCartStore } from "@/app/store/product-cart";
 import { products } from "@/app/utils/data/products";
@@ -16,17 +17,15 @@ export default function Product() {
     const { id } = useLocalSearchParams();
     const cartStore = useCartStore();
 
+    const [product, setProduct] = useState<ProductList>({} as ProductList);
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState(0);
 
-    const product = products.find((item) => item.id === id);
-    const productPrice = formatCurrency(product?.price);
-
-    async function handleShowProduct(productId: string) {
+    async function handleShowProduct() {
         try {
-            const response = await api.get(`/product/${productId}`);
+            const response = await api.get(`/product/${id}`);
 
-            console.log(response);
+            setProduct(response.data.product);
         } catch (err) {
             console.log(err);
         }
@@ -38,12 +37,12 @@ export default function Product() {
 
     function handleAddQuantityProduct() {
         setQuantity(prevQuantity => prevQuantity + 1);
-        setTotal(Number(product?.price) * quantity);
+        setTotal(Number(product?.VR_UNITARIO) * quantity);
     }
 
     function handleRemoveQuantityProduct() {
         setQuantity(prevQuantity => prevQuantity > 0 ? prevQuantity - 1 : 0);
-        setTotal(Number(product?.price) * quantity);
+        setTotal(Number(product?.VR_UNITARIO) * quantity);
     }
 
     function handleAddToCart() {
@@ -55,8 +54,9 @@ export default function Product() {
     }
 
     useEffect(() => {
-        setTotal(Number(product?.price) * quantity);
-        handleShowProduct('1');
+        setTotal(Number(product?.VR_UNITARIO) * quantity);
+
+        handleShowProduct();
     }, [product, quantity]);
 
     return (
@@ -66,18 +66,18 @@ export default function Product() {
                     <TouchableOpacity>
                         <Feather name="chevron-left" size={24} color={colors.gray[50]} onPress={handleGoBack} />
                     </TouchableOpacity>
-                    <Text className="text-gray-50 text-2xl">{product?.title}</Text>
+                    <Text className="text-gray-50 text-2xl">{product?.DESCRICAO_CATEGORIA}</Text>
                     <View></View>
                 </SafeAreaView>
                 <View className="flex-1 items-start border-b-[1px] border-gray-400 p-3 space-y-3" >
                     <Text className="text-lg mt-5">
-                        {product?.title}
+                        {product?.DESCRICAO_PRODUTO}
                     </Text>
                     <Text>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget mauris diam. Sed ut tincidunt risus.
                     </Text>
                     <Text className="text-gray-500 font-heading">
-                        {productPrice}
+                        R$ {product.VR_UNITARIO}
                     </Text>
                 </View>
 

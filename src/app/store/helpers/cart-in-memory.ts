@@ -2,10 +2,10 @@ import { ProductDTO } from '@/DTO/ProductDTO';
 import { ProductCartProps } from '../product-cart';
 
 export function add(products: ProductCartProps[], newProduct: ProductDTO) {
-    const existingProduct = products.find(({ id }) => newProduct.id === id);
+    const existingProduct = products.find(({ CD_PRODUTO }) => newProduct.id === CD_PRODUTO);
 
     if (existingProduct) {
-        return products.map((product) => product.id === existingProduct.id
+        return products.map((product) => product.CD_PRODUTO === existingProduct.CD_PRODUTO
             ? { ...products, quantity: product.quantity + 1 }
             : product)
     }
@@ -14,7 +14,7 @@ export function add(products: ProductCartProps[], newProduct: ProductDTO) {
 };
 
 export function remove(products: ProductCartProps[], productRemoveId: string) {
-    const updatedProducts = products.map((product) => product.id === productRemoveId ? {
+    const updatedProducts = products.map((product) => product.CD_PRODUTO === productRemoveId ? {
         ...product,
         quantity: product.quantity > 1 ? product.quantity - 1 : 0
     } : product

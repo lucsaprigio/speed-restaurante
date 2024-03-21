@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ProductDTO } from '@/DTO/ProductDTO';
+import { ProductDTO, ProductList } from '@/DTO/ProductDTO';
 
-export type ProductCartProps = ProductDTO & {
+export type ProductCartProps = ProductList & {
     quantity: number
 }
 
@@ -34,12 +34,12 @@ export const useCartStore = create(persist<StateProps>((set) => ({
     storage: createJSONStorage(() => AsyncStorage),
 }))
 
-function add(products: ProductCartProps[], newProduct: ProductDTO): ProductCartProps[] {
-    const existingProduct = products.find(({ id }) => newProduct.id === id);
+function add(products: ProductCartProps[], newProduct: ProductList): ProductCartProps[] {
+    const existingProduct = products.find(({ CD_PRODUTO }) => newProduct.CD_PRODUTO === CD_PRODUTO);
 
     if (existingProduct) {
         return products.map((product) =>
-            product.id === existingProduct.id
+            product.CD_PRODUTO === existingProduct.CD_PRODUTO
                 ? { ...product, quantity: product.quantity + 1 }
                 : product
         );
@@ -50,7 +50,7 @@ function add(products: ProductCartProps[], newProduct: ProductDTO): ProductCartP
 
 function remove(products: ProductCartProps[], productRemovedId: string) {
     const updatedProducts = products.map((product) =>
-        product.id === productRemovedId ? {
+        product.CD_PRODUTO === productRemovedId ? {
             ...product,
             quantity: product.quantity > 1 ? product.quantity - 1 : 0
         } : product

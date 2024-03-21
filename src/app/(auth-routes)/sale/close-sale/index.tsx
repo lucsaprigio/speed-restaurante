@@ -14,14 +14,14 @@ export default function CloseSale() {
     const cartStore = useCartStore();
     const router = useRouter();
 
-    const total = formatCurrency(cartStore.products.reduce((total, product) => total + product.price * product.quantity, 0));
+    const total = formatCurrency(cartStore.products.reduce((total, product) => total + product.VR_UNITARIO * product.quantity, 0));
 
     function handleGoBack() {
         return router.back();
     }
 
     function handleRemoveItem(product: ProductCartProps) {
-        return cartStore.remove(product.id)
+        return cartStore.remove(product.CD_PRODUTO)
     }
 
     function handleCloseSale() {
@@ -58,17 +58,16 @@ export default function CloseSale() {
                 <View></View>
             </SafeAreaView>
             <ScrollView>
-                <Text className="text-lg text-center my-6 font-heading">Pedido nº {saleId}</Text>
-                <Text className="text-lg text-center font-heading text-blue-950">Mesa {id}</Text>
+                <Text className="text-lg text-center font-heading text-blue-950 mt-3">Mesa {id}</Text>
                 {
                     cartStore.products.map((item) => (
                         <ProductInCart
-                            key={item.id}
-                            title={`${item.title}`}
-                            subtitle={`${item.subtitle}`}
-                            price={formatCurrency(item.price)}
+                            key={item.CD_PRODUTO}
+                            title={`${item.DESCRICAO_PRODUTO}`}
+                            subtitle={`${item.DESCRICAO_PRODUTO}`}
+                            price={formatCurrency(item.VR_UNITARIO)}
                             quantity={item.quantity}
-                            total={formatCurrency(item.quantity * item.price)}
+                            total={formatCurrency(item.quantity * item.VR_UNITARIO)}
                             onPress={() => handleRemoveItem(item)}
                         />
                     ))
