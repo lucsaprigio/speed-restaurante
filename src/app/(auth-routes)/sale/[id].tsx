@@ -71,7 +71,6 @@ export default function Sale() {
     };
 
     useEffect(() => {
-        setSaleId(id.toString());
         setFilteredProducts(productList);
         handleListProducts();
         handleListCategories();
@@ -111,7 +110,6 @@ export default function Sale() {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ gap: 12, paddingHorizontal: 20 }}
                 />
-
             </View>
 
             <View className="m-1 flex items-start">
@@ -143,14 +141,13 @@ export default function Sale() {
                             subtitle={product.item.DESCRICAO_PRODUTO}
                             price={formatCurrency(product.item.VR_UNITARIO)}
                             action={() => handleEditProduct(product.item.CD_PRODUTO)}
-                            quantity={quantityInCart.toString()} />
+                            quantity={quantityInCart} />
                     )
                 }
                 }
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 100 }}
             />
-
         </>
     )
 }

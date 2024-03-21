@@ -1,6 +1,6 @@
 import { ProductList } from "@/DTO/ProductDTO";
 import { api } from "@/app/api/api";
-import { useCartStore } from "@/app/store/product-cart";
+import { ProductCartProps, useCartStore } from "@/app/store/product-cart";
 import { products } from "@/app/utils/data/products";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { Button } from "@/components/button";
@@ -47,7 +47,7 @@ export default function Product() {
 
     function handleAddToCart() {
         if (product) {
-            cartStore.add({ ...product, quantity });
+            cartStore.add(product as ProductCartProps, quantity);
             console.log({ ...product, quantity })
             navigation.goBack();
         }

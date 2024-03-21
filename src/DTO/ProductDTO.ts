@@ -13,3 +13,13 @@ export type ProductList = {
     DESCRICAO_CATEGORIA: string;
     VR_UNITARIO: number;
 }
+
+export type ProductCartLaunch = {
+    productId: string;
+    productDescription: string,
+    quantity: number;
+    price: number;
+    descount?: number;
+    totalProduct: number;
+    obsProduct: string;
+}

@@ -1,3 +1,4 @@
+import { api } from "@/app/api/api";
 import { ProductCartProps, useCartStore } from "@/app/store/product-cart";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { Button } from "@/components/button";
@@ -5,12 +6,13 @@ import { ProductInCart } from "@/components/protuct-in-cart";
 import { Feather } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text } from "react-native";
+import { Alert, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "tailwindcss/colors";
 
 export default function CloseSale() {
-    const { id, saleId } = useLocalSearchParams();
+    const { id } = useLocalSearchParams();
     const cartStore = useCartStore();
     const router = useRouter();
 
@@ -24,6 +26,21 @@ export default function CloseSale() {
         return cartStore.remove(product.CD_PRODUTO)
     }
 
+    async function handleCreateSale() {
+        try {
+            await api.post('/new-sale', {
+                tableId: id,
+                obs: '',
+                total: total,
+                launchs: cartStore.getProductsArray()
+            });
+
+        } catch (err) {
+            Alert.alert('Algo deu errado', 'Ocorreu um erro, Tente novamente.');
+            console.log(err);
+        }
+    }
+
     function handleCloseSale() {
         Alert.alert("Fechamento", 'Enviar à Cozinha?', [
             {
@@ -33,10 +50,9 @@ export default function CloseSale() {
                 text: "Fechar Pedido",
                 onPress: () => {
                     // Aqui vai as funções da rota que vou criar
-                    console.log({ ...cartStore, total })
-                    console.log({ id });
-                    cartStore.clear();
-                    router.push('/(auth-routes)/');
+                    handleCreateSale();
+                    // cartStore.clear();
+                    // router.push('/(auth-routes)/');
                 }
             }
         ]
