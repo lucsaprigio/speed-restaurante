@@ -13,7 +13,10 @@ export default function Tables() {
 
     const [tables, setTables] = useState<Table[]>([]);
 
-    function handleOpenSale(id: string) {
+    function handleOpenSale(id: string, busy: string) {
+        if (busy === 'S') {
+            return router.push(`/`)
+        }
         return router.push(`/sale/${id}`)
     }
 
@@ -54,7 +57,10 @@ export default function Tables() {
                 <View className="flex flex-row flex-wrap gap-1 items-center justify-center">
                     {
                         tables.map((table) => (
-                            <TableCard key={table.CD_MESA.toString()} busy={table.OCUPADA.toString()} id={table.CD_MESA} onPress={() => handleOpenSale(table.CD_MESA.toString())} />
+                            <TableCard
+                                key={table.CD_MESA.toString()}
+                                busy={table.OCUPADA.toString()}
+                                id={table.CD_MESA} onPress={() => handleOpenSale(table.CD_MESA.toString(), '1')} />
                         ))
                     }
                 </View>

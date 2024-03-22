@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ProductCartLaunch, ProductList } from '@/DTO/ProductDTO';
 
 export type ProductCartProps = ProductList & {
-    quantity: number
+    quantity: number;
 }
 
 type StateProps = {
@@ -39,7 +39,7 @@ export const useCartStore = create(persist<StateProps>((set, get) => ({
             price: product.VR_UNITARIO,
             totalProduct: product.VR_UNITARIO * product.quantity,
             descount: 0,
-            quantity: product.quantity,
+            quantity: product.quantity
         }));
     }
 

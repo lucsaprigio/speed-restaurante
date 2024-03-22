@@ -17,6 +17,7 @@ export default function CloseSale() {
     const router = useRouter();
 
     const total = formatCurrency(cartStore.products.reduce((total, product) => total + product.VR_UNITARIO * product.quantity, 0));
+    const totalToBack = cartStore.products.reduce((total, product) => total + product.VR_UNITARIO * product.quantity, 0);
 
     function handleGoBack() {
         return router.back();
@@ -31,7 +32,7 @@ export default function CloseSale() {
             await api.post('/new-sale', {
                 tableId: id,
                 obs: '',
-                total: total,
+                total: totalToBack,
                 launchs: cartStore.getProductsArray()
             });
 
@@ -51,8 +52,8 @@ export default function CloseSale() {
                 onPress: () => {
                     // Aqui vai as funções da rota que vou criar
                     handleCreateSale();
-                    // cartStore.clear();
-                    // router.push('/(auth-routes)/');
+                    cartStore.clear();
+                    router.push('/(auth-routes)/');
                 }
             }
         ]
