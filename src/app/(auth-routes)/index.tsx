@@ -13,11 +13,15 @@ export default function Tables() {
 
     const [tables, setTables] = useState<Table[]>([]);
 
-    function handleOpenSale(id: string, busy: string) {
+    function handleOpenSale(id: string, busy: string, saleId: string) {
         if (busy === 'S') {
-            return router.push(`/`)
+            return router.push({
+                pathname: `/(auth-routes)/show-sale/${id}`,
+                params: { saleId }
+            })
+        } else {
+            return router.push(`/sale/${id}`)
         }
-        return router.push(`/sale/${id}`)
     }
 
     async function handleGetTables() {
@@ -46,7 +50,7 @@ export default function Tables() {
 
     useEffect(() => {
         handleGetTables();
-    }, [])
+    }, [tables])
 
     return (
         <>
@@ -58,9 +62,11 @@ export default function Tables() {
                     {
                         tables.map((table) => (
                             <TableCard
+                                onPress={() => { handleOpenSale(table.CD_MESA, table.OCUPADA, table.CD_PEDIDO) }}
                                 key={table.CD_MESA.toString()}
                                 busy={table.OCUPADA.toString()}
-                                id={table.CD_MESA} onPress={() => handleOpenSale(table.CD_MESA.toString(), '1')} />
+                                id={table.CD_MESA}
+                            />
                         ))
                     }
                 </View>

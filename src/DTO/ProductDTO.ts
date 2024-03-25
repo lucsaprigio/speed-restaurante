@@ -23,3 +23,13 @@ export type ProductCartLaunch = {
     totalProduct: number;
     obsProduct: string;
 }
+
+export type ProductLaunchList = {
+    CD_PRODUTO: string;
+    DESCRICAO_PRODUTO: string,
+    QTD_PRODUTO: number;
+    UNIT_PRODUTO: number;
+    DESCONTO_PRODUTO?: number;
+    TOTAL_PRODUTO: number;
+    OBS_PRODUTO: string;
+}
