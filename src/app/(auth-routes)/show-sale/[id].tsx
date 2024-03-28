@@ -12,17 +12,21 @@ import colors from "tailwindcss/colors";
 export default function ShowSale() {
     const { id, saleId } = useLocalSearchParams();
     const [saleLaunch, setSaleLaunch] = useState<ProductLaunchList[]>([]);
-    const [total, setTotal] = useState(formatCurrency(0));
+    const [total, setTotal] = useState(0);
 
     function handleGoBack() {
         return router.back();
     };
 
+    function handleUpdateSale(id: string, saleId: string) {
+        return router.push({ pathname: `/sale/update-sale/${id}`, params: { saleId, totalSale: total } })
+    }
+
     async function handleGetSale() {
         try {
             const response = await api.get(`/sale/${saleId}`);
 
-            setTotal(formatCurrency(response.data[0].TOTAL));
+            setTotal(response.data[0].TOTAL);
             setSaleLaunch(response.data);
         } catch (err) {
             console.log(err)
@@ -65,9 +69,9 @@ export default function ShowSale() {
             </ScrollView>
             <View className="fixed bottom-0 p-3 bg-gray-100">
                 <View className="text-lg py-3">
-                    <Text className="font-bold text-green-900">Total do Pedido: {total || 0}</Text>
+                    <Text className="font-bold text-green-900">Total do Pedido: {formatCurrency(total) || 0}</Text>
                 </View>
-                <Button onPress={() => { }}>
+                <Button onPress={() => handleUpdateSale(id as string, saleId as string)}>
                     <Button.Text>
                         Adicionar ao pedido
                     </Button.Text>

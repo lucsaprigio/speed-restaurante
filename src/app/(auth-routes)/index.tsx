@@ -6,12 +6,14 @@ import { api } from "../api/api";
 import { useEffect, useState } from "react";
 import { Table } from "@/DTO/TableDTO";
 import { useAuth } from "../hooks/auth";
+import { Loading } from "@/components/loading";
 
 export default function Tables() {
     const { signOut } = useAuth();
     const router = useRouter();
 
     const [tables, setTables] = useState<Table[]>([]);
+    const [loading, setLoading] = useState(false);
 
     function handleOpenSale(id: string, busy: string, saleId: string) {
         if (busy === 'S') {
@@ -26,9 +28,11 @@ export default function Tables() {
 
     async function handleGetTables() {
         try {
+            setLoading(true);
             const response = await api.get('/tables');
 
             setTables(response.data);
+            setLoading(false);
         } catch (err) {
             console.log(err);
         }
@@ -50,7 +54,7 @@ export default function Tables() {
 
     useEffect(() => {
         handleGetTables();
-    }, [tables])
+    }, [tables, loading])
 
     return (
         <>
@@ -60,14 +64,23 @@ export default function Tables() {
 
                 <View className="flex flex-row flex-wrap gap-1 items-center justify-center">
                     {
-                        tables.map((table) => (
-                            <TableCard
-                                onPress={() => { handleOpenSale(table.CD_MESA, table.OCUPADA, table.CD_PEDIDO) }}
-                                key={table.CD_MESA.toString()}
-                                busy={table.OCUPADA.toString()}
-                                id={table.CD_MESA}
-                            />
-                        ))
+                        loading === false ? (<Loading />) :
+                            (
+                                tables.length > 0 ? (
+                                    tables.map((table) => (
+                                        <TableCard
+                                            onPress={() => { handleOpenSale(table.CD_MESA, table.OCUPADA, table.CD_PEDIDO) }}
+                                            key={table.CD_MESA.toString()}
+                                            busy={table.OCUPADA.toString()}
+                                            id={table.CD_MESA}
+                                        />
+                                    ))
+                                ) : (
+                                    <View className="flex-1 items-center justify-center p-3">
+                                        <Text className="text-lg text-gray-500">Não há mesas cadastradas</Text>
+                                    </View>
+                                )
+                            )
                     }
                 </View>
             </ScrollView>
