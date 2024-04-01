@@ -1,10 +1,9 @@
-import { Redirect, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 import { Button } from "@/components/button";
 import { Header } from "@/components/header";
 import { Input } from "@/components/input";
 import { View, Text } from "react-native";
-import { useAuth } from './hooks/auth';
 import { useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 
@@ -48,6 +47,9 @@ export default function Home() {
                             Cadastrar
                         </Button.Text>
                     </Button>
+                </View>
+                <View>
+                    <Text>v.1.0.0</Text>
                 </View>
             </View>
         </>

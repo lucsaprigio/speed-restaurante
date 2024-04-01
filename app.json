@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "speed-restaurante",
+    "name": "Speed Restaurante",
     "slug": "speed-restaurante",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#EEF4ED"
-      }
+      },
+      "package": "com.pripowla.speedrestaurante"
     },
     "web": {
       "bundler": "metro",
@@ -32,10 +33,26 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "ea423cea-6ab4-40bb-9d81-7c125a00b86f"
+      }
     }
   }
 }
