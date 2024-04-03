@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: "http://speed.assistant.com.br:8082"
+    baseURL: process.env.EXPO_PUBLIC_API_URL
 });
 
 export { api };
