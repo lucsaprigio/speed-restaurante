@@ -48,8 +48,8 @@ export default function Home() {
                         </Button.Text>
                     </Button>
                 </View>
-                <View>
-                    <Text>v.1.0.0</Text>
+                <View className="absolute bottom-0 px-2">
+                    <Text className="text-xs text-blue-950">v.1.0.0</Text>
                 </View>
             </View>
         </>
