@@ -1,4 +1,4 @@
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Alert, RefreshControl, ScrollView, Text, View } from "react-native";
 import { TableCard } from "../../components/table-card";
 import { useRouter } from "expo-router";
 import { SignedHeader } from "../../components/signed-header";
@@ -14,6 +14,7 @@ export default function Tables() {
 
     const [tables, setTables] = useState<Table[]>([]);
     const [loading, setLoading] = useState(false);
+    const [refresh, setRefresh] = useState(false);
 
     function handleOpenSale(id: string, busy: string, saleId: string) {
         if (busy === 'S') {
@@ -30,13 +31,23 @@ export default function Tables() {
         try {
             setLoading(true);
             const response = await api.get('/tables');
+            console.log(response.data)
 
             setTables(response.data);
             setLoading(false);
         } catch (err) {
             console.log(err);
+            Alert.alert('Ocorreu um erro', 'Não foi possível carregar as mesas')
         }
     }
+
+    async function onRefresh() {
+        setRefresh(true);
+        setTimeout(() => {
+            setRefresh(false);
+            handleGetTables();
+        })
+    };
 
     function handleLogout() {
         return Alert.alert('Logoff', 'Deseja sair?', [
@@ -59,7 +70,12 @@ export default function Tables() {
     return (
         <>
             <SignedHeader onPress={handleLogout} />
-            <ScrollView className="py-4 flex-1 bg-gray-200">
+            <ScrollView 
+                className="py-4 flex-1 bg-gray-200"
+                refreshControl={<RefreshControl
+                    refreshing={refresh}
+                    onRefresh={onRefresh} />}    
+                >
                 <Text className="font-heading text-lg m-2 text-gray-500">Selecione uma mesa para começar:</Text>
 
                 <View className="flex flex-row flex-wrap gap-1 items-center justify-center">

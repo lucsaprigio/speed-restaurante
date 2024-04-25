@@ -11,6 +11,7 @@ export type ProductList = {
     CD_CATEGORIA: string;
     DESCRICAO_PRODUTO: string;
     DESCRICAO_CATEGORIA: string;
+    SUBDESCRICAO: string;
     VR_UNITARIO: number;
 }
 

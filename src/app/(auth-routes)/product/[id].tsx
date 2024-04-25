@@ -66,7 +66,7 @@ export default function Product() {
                     <TouchableOpacity>
                         <Feather name="chevron-left" size={24} color={colors.gray[50]} onPress={handleGoBack} />
                     </TouchableOpacity>
-                    <Text className="text-gray-50 text-2xl">{product?.DESCRICAO_CATEGORIA}</Text>
+                    <Text className="text-gray-50 text-2xl">{product?.DESCRICAO_PRODUTO}</Text>
                     <View></View>
                 </SafeAreaView>
                 <View className="flex-1 items-start border-b-[1px] border-gray-400 p-3 space-y-3" >
@@ -74,7 +74,7 @@ export default function Product() {
                         {product?.DESCRICAO_PRODUTO}
                     </Text>
                     <Text>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget mauris diam. Sed ut tincidunt risus.
+                        {product.SUBDESCRICAO}
                     </Text>
                     <Text className="text-gray-500 font-heading">
                         R$ {product.VR_UNITARIO}
