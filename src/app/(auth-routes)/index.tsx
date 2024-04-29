@@ -25,13 +25,12 @@ export default function Tables() {
         } else {
             return router.push(`/sale/${id}`)
         }
-    }
+    };
 
     async function handleGetTables() {
         try {
             setLoading(true);
             const response = await api.get('/tables');
-            console.log(response.data)
 
             setTables(response.data);
             setLoading(false);
@@ -39,7 +38,7 @@ export default function Tables() {
             console.log(err);
             Alert.alert('Ocorreu um erro', 'Não foi possível carregar as mesas')
         }
-    }
+    };
 
     async function onRefresh() {
         setRefresh(true);
@@ -61,11 +60,11 @@ export default function Tables() {
                 }
             }
         ])
-    }
+    };
 
     useEffect(() => {
         handleGetTables();
-    }, [tables, loading])
+    }, [tables, loading]);
 
     return (
         <>

@@ -25,6 +25,7 @@ export default function ShowSale() {
     async function handleGetSale() {
         try {
             const response = await api.get(`/sale/${saleId}`);
+            console.log(response.data);
 
             setTotal(response.data[0].TOTAL);
             setSaleLaunch(response.data);
@@ -63,6 +64,16 @@ export default function ShowSale() {
                             <Text className="text-blue-950 font-bold">Qtd. {product.QTD_PRODUTO || 0}</Text>
                             <Text className="text-lg">Valor: R$ {product.UNIT_PRODUTO.toFixed(2) || 0}</Text>
                             <Text className="text-lg font-bold text-blue-950">Total: R$ {product.TOTAL_PRODUTO.toFixed(2) || 0}</Text>
+                            {
+                                product.STATUS_LANCA === '0' ? (
+                                    <Text className="text-red-500">
+                                        Em andamento
+                                    </Text>) : (
+                                    <Text className="text-green-500">
+                                        Pronto
+                                    </Text>
+                                )
+                            }
                         </View>
                     ))
                 }
@@ -79,6 +90,16 @@ export default function ShowSale() {
                         <MaterialIcons name="add-circle" size={24} color={colors.gray[50]} />
                     </Button.Icon>
                 </Button>
+                <View className="my-2">
+                    <Button onPress={() => handleUpdateSale(id as string, saleId as string)}>
+                        <Button.Text>
+                            Fechar pedido
+                        </Button.Text>
+                        <Button.Icon>
+                            <MaterialIcons name="check" size={24} color={colors.gray[50]} />
+                        </Button.Icon>
+                    </Button>
+                </View>
             </View>
         </>
     )

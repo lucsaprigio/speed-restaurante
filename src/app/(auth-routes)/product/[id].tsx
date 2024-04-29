@@ -7,6 +7,7 @@ import { Button } from "@/components/button";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
+import { FlatList } from "react-native";
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -83,6 +84,9 @@ export default function Product() {
 
                 <View className="flex-1 items-start border-b-[1px] border-gray-400 space-y-3 p-3">
                     <Text>Complementos</Text>
+{/*                     <FlatList 
+                        data={}
+                    /> */}
                 </View>
 
                 <View className="flex-1 items-start justify-center p-3">
