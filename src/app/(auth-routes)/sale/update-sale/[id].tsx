@@ -53,8 +53,8 @@ export default function UpdateSale() {
     };
 
 
-    function handleAddToCart(CD_PRODUTO: string, CD_CATEGORIA: string, DESCRICAO_CATEGORIA: string, DESCRICAO_PRODUTO: string, VR_UNITARIO: number, quantity: number) {
-        cartStore.add({ CD_PRODUTO, CD_CATEGORIA, DESCRICAO_CATEGORIA, DESCRICAO_PRODUTO, VR_UNITARIO, quantity }, quantity);
+    function handleAddToCart(CD_PRODUTO: string, CD_CATEGORIA: string, DESCRICAO_CATEGORIA: string, SUBDESCRICAO: string, DESCRICAO_PRODUTO: string, VR_UNITARIO: number, quantity: number) {
+        cartStore.add({ CD_PRODUTO, CD_CATEGORIA, DESCRICAO_CATEGORIA, SUBDESCRICAO, DESCRICAO_PRODUTO, VR_UNITARIO, quantity }, quantity);
     }
 
 
@@ -184,6 +184,7 @@ export default function UpdateSale() {
                                     product.item.CD_CATEGORIA,
                                     product.item.DESCRICAO_CATEGORIA,
                                     product.item.DESCRICAO_PRODUTO,
+                                    product.item.SUBDESCRICAO,
                                     product.item.VR_UNITARIO,
                                     1
                                 )

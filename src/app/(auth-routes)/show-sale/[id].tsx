@@ -35,7 +35,7 @@ export default function ShowSale() {
     };
 
     useEffect(() => {
-        handleGetSale()
+        // handleGetSale()
     }, []);
 
     return (
