@@ -31,6 +31,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     async function signIn({ userId, password }: SigninCreadentials) {
         try {
             const response = await api.post('/signin', { userId, password });
+            console.log(response.data)
 
             if (response.data.error) {
                 Alert.alert(`${response.data.error}`)

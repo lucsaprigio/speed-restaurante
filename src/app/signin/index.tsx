@@ -20,11 +20,16 @@ export default function SignIn() {
 
     async function handleLogin(userId: string, password: string) {
         if (password !== '') {
-            setUserId(userId)
-            await signIn({ userId, password });
+            api.post(`/session/${userId}`)
+                .then(() => {
+                    setUserId(userId);
+                    signIn({ userId, password });
+                })
+                .catch((err) => Alert.alert(`${err} `))
         } else {
             Alert.alert('Favor preencher a senha')
         }
+
     }
 
     async function handleGetUsers() {
