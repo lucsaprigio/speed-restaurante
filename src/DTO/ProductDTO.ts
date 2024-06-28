@@ -15,6 +15,15 @@ export type ProductList = {
     VR_UNITARIO: number;
 }
 
+export type ProductListRegistered = {
+    CD_PRODUTO: string,
+    CD_SUBGRUPOS: string,
+    DESCRICAO_PRODUTO: string;
+    DESCRICAO_SUBGRUPO: string,
+    SUBPRODUTOS: string,
+    VENDA_PRODUTO: number
+}
+
 export type ProductCartLaunch = {
     productId: string;
     productDescription: string,

@@ -26,7 +26,7 @@ export function CategoryButton({ title, isSelected, icon = 'circle', ...rest }: 
     const iconMapping: IconMapping = {
         'Pizzas': 'pizza',
         'Lanches': 'food',
-        'Bebidas': 'bottle-soda-classic',
+        'BEBIDAS': 'bottle-soda-classic',
         'Porções': 'room-service'
     };
 

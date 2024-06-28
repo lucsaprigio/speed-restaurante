@@ -21,11 +21,12 @@ export default function Home() {
             if (!!user) {
                 router.push('/(auth-routes)')
             }
+
+            handleRegister();
         }
         getInfo();
     }, []);
 
-    // Outra alteração
     return (
         <>
             <Header title="Cadastrar Aparelho" icon />

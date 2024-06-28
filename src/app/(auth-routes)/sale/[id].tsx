@@ -11,7 +11,7 @@ import { useCartStore } from "@/app/store/product-cart";
 import { SaleCart } from "@/components/sale-cart";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { api } from "@/app/api/api";
-import { ProductList } from "@/DTO/ProductDTO";
+import { ProductList, ProductListRegistered } from "@/DTO/ProductDTO";
 import { Loading } from "@/components/loading";
 import { Category } from "@/DTO/CategoryDTO";
 
@@ -24,9 +24,9 @@ export default function Sale() {
     const [lastSaleId, setLastSaleId] = useState<Number | any>();
     const [category, setCategory] = useState('');
     const [categoryList, setCategoryList] = useState<Category[]>([]);
-    const [productList, setProductList] = useState<ProductList[]>([]);
+    const [productList, setProductList] = useState<ProductListRegistered[]>([]);
 
-    const [filteredProducts, setFilteredProducts] = useState<ProductList[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<ProductListRegistered[]>([]);
 
     async function handleListProducts() {
         try {
@@ -60,7 +60,7 @@ export default function Sale() {
     function handleCategorySelect(selectedCategory: string) {
         setCategory(selectedCategory);
 
-        const productsFiltered = productList.filter(product => selectedCategory === product.DESCRICAO_CATEGORIA);
+        const productsFiltered = productList.filter(product => selectedCategory === product.DESCRICAO_SUBGRUPO);
 
         setFilteredProducts(productsFiltered);
     };
@@ -131,7 +131,7 @@ export default function Sale() {
             <FlatList
                 className="flex-1 p-5"
                 data={filteredProducts && productList}
-                keyExtractor={(product) => product.CD_PRODUTO}
+                keyExtractor={(product) => product.SUBPRODUTOS}
                 renderItem={(product) => {
                     const productInCart = cartStore.products.find(cartItem => cartItem.CD_PRODUTO === product.item.CD_PRODUTO);
                     const quantityInCart = productInCart ? productInCart.quantity : 0;
@@ -139,7 +139,7 @@ export default function Sale() {
                         <Product
                             title={product.item.DESCRICAO_PRODUTO}
                             subtitle={product.item.DESCRICAO_PRODUTO}
-                            price={formatCurrency(product.item.VR_UNITARIO)}
+                            price={formatCurrency(product.item.VENDA_PRODUTO)}
                             action={() => handleEditProduct(product.item.CD_PRODUTO)}
                             quantity={quantityInCart} />
                     )
