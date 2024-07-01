@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Alert, Image, RefreshControl, ScrollView, Text, View } from "react-native";
 import { useAuth } from "../hooks/auth";
 
-import colors from "tailwindcss/colors";
 import { api } from "../api/api";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
@@ -34,7 +33,7 @@ export default function SignIn() {
             const response = await api.get('/users');
 
             setUsers(response.data);
-            setUserId(response.data.USERID);
+            setUserId(response.data[0].USERID);
         } catch (err) {
             Alert.alert('Ocorreu um erro', 'Não foi possível conectar ao servidor.')
         }

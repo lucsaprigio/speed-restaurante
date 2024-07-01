@@ -1,4 +1,4 @@
-import { Redirect, Slot } from "expo-router";
+import { Redirect, Slot, useRouter } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
 
 import {
@@ -16,11 +16,24 @@ import { AuthProvider, useAuth } from "./hooks/auth";
 // Carregar as fontes antes de iniciar a aplicação
 // Obs: Temos que configurar dentro do tailwind.config.js no extend, para fazer junção as fontes com tailwindcss
 export default function Layout() {
+  const router = useRouter();
+
   const [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_500Medium,
     Roboto_700Bold
   });
+
+  async function getInfo() {
+    const user = await SecureStore.getItemAsync('app_user');
+    console.log(!user);
+
+    if (!user) {
+      return router.push('/(auth-routes)')
+    }
+
+    return router.push('/signin/')
+  }
 
   useEffect(() => {
     const disableBackHandler = () => {
@@ -32,7 +45,8 @@ export default function Layout() {
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', disableBackHandler);
     };
-  }, []); // Apenas é executado uma vez no carregamento inicial
+  }, []);
+
 
   if (!fontsLoaded) {
     return <Loading />

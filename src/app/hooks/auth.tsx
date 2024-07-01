@@ -54,7 +54,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         } catch (error) {
             console.log(error.message)
             if (error.message === 'Request failed with status code 402') {
-                Alert.alert('Usuário fora do uso registrado');
+                Alert.alert('Usuário fora do horário registrado');
             } else {
                 Alert.alert('Usuário ou senha incorretos');
             }

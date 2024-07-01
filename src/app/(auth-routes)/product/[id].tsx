@@ -75,7 +75,7 @@ export default function Product() {
                         {product?.DESCRICAO_PRODUTO}
                     </Text>
                     <Text>
-                        {product.SUBDESCRICAO}
+                        {product.SUBDESCRICAO_PRODUTO}
                     </Text>
                     <Text className="text-gray-500 font-heading">
                         R$ {product.VR_UNITARIO}

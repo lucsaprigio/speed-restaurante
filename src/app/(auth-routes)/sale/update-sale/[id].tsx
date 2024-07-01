@@ -5,10 +5,8 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import colors from "tailwindcss/colors";
-import { Product } from "../../../../components/product";
 import { CategoryButton } from "../../../../components/category-button";
-import { ProductCartProps, useCartStore } from "@/app/store/product-cart";
-import { SaleCart } from "@/components/sale-cart";
+import { useCartStore } from "@/app/store/product-cart";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { api } from "@/app/api/api";
 import { ProductList } from "@/DTO/ProductDTO";
@@ -53,8 +51,8 @@ export default function UpdateSale() {
     };
 
 
-    function handleAddToCart(CD_PRODUTO: string, CD_CATEGORIA: string, DESCRICAO_CATEGORIA: string, SUBDESCRICAO: string, DESCRICAO_PRODUTO: string, VR_UNITARIO: number, quantity: number) {
-        cartStore.add({ CD_PRODUTO, CD_CATEGORIA, DESCRICAO_CATEGORIA, SUBDESCRICAO, DESCRICAO_PRODUTO, VR_UNITARIO, quantity }, quantity);
+    function handleAddToCart(CD_PRODUTO: string, CD_CATEGORIA: string, DESCRICAO_CATEGORIA: string, SUBDESCRICAO_PRODUTO: string, DESCRICAO_PRODUTO: string, VR_UNITARIO: number, quantity: number) {
+        cartStore.add({ CD_PRODUTO, CD_CATEGORIA, DESCRICAO_CATEGORIA, SUBDESCRICAO_PRODUTO, DESCRICAO_PRODUTO, VR_UNITARIO, quantity }, quantity);
     }
 
 
@@ -184,7 +182,7 @@ export default function UpdateSale() {
                                     product.item.CD_CATEGORIA,
                                     product.item.DESCRICAO_CATEGORIA,
                                     product.item.DESCRICAO_PRODUTO,
-                                    product.item.SUBDESCRICAO,
+                                    product.item.SUBDESCRICAO_PRODUTO,
                                     product.item.VR_UNITARIO,
                                     1
                                 )

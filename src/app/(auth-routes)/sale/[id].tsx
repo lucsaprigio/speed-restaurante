@@ -11,7 +11,7 @@ import { useCartStore } from "@/app/store/product-cart";
 import { SaleCart } from "@/components/sale-cart";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { api } from "@/app/api/api";
-import { ProductList, ProductListRegistered } from "@/DTO/ProductDTO";
+import { ProductList } from "@/DTO/ProductDTO";
 import { Loading } from "@/components/loading";
 import { Category } from "@/DTO/CategoryDTO";
 
@@ -24,13 +24,14 @@ export default function Sale() {
     const [lastSaleId, setLastSaleId] = useState<Number | any>();
     const [category, setCategory] = useState('');
     const [categoryList, setCategoryList] = useState<Category[]>([]);
-    const [productList, setProductList] = useState<ProductListRegistered[]>([]);
+    const [productList, setProductList] = useState<ProductList[]>([]);
 
-    const [filteredProducts, setFilteredProducts] = useState<ProductListRegistered[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<ProductList[]>([]);
 
     async function handleListProducts() {
         try {
             const response = await api.get('/products');
+            console.log(response.data);
 
             setProductList(response.data);
         } catch (err) {
@@ -60,7 +61,7 @@ export default function Sale() {
     function handleCategorySelect(selectedCategory: string) {
         setCategory(selectedCategory);
 
-        const productsFiltered = productList.filter(product => selectedCategory === product.DESCRICAO_SUBGRUPO);
+        const productsFiltered = productList.filter(product => selectedCategory === product.DESCRICAO_PRODUTO);
 
         setFilteredProducts(productsFiltered);
     };
@@ -131,15 +132,15 @@ export default function Sale() {
             <FlatList
                 className="flex-1 p-5"
                 data={filteredProducts && productList}
-                keyExtractor={(product) => product.SUBPRODUTOS}
+                keyExtractor={(product) => product.CD_PRODUTO}
                 renderItem={(product) => {
                     const productInCart = cartStore.products.find(cartItem => cartItem.CD_PRODUTO === product.item.CD_PRODUTO);
                     const quantityInCart = productInCart ? productInCart.quantity : 0;
                     return (
                         <Product
-                            title={product.item.DESCRICAO_PRODUTO}
-                            subtitle={product.item.DESCRICAO_PRODUTO}
-                            price={formatCurrency(product.item.VENDA_PRODUTO)}
+                            title={product.item.DESCRICAO_PRODUTO.toUpperCase()}
+                            subtitle={product.item.DESCRICAO_PRODUTO.toUpperCase()}
+                            price={formatCurrency(product.item.VR_UNITARIO)}
                             action={() => handleEditProduct(product.item.CD_PRODUTO)}
                             quantity={quantityInCart} />
                     )
