@@ -37,6 +37,12 @@ function AuthProvider({ children }: AuthProviderProps) {
                 Alert.alert(`${response.data.error}`)
             }
 
+            const userSession = await api.post(`/session/${userId}`);
+
+            if (userSession.data.error) {
+                Alert.alert(`${userSession.data.error}`);
+            }
+
             api.defaults.headers.common[
                 "Authorization"
             ] = `Bearer ${response.data.user.token}`
@@ -45,8 +51,13 @@ function AuthProvider({ children }: AuthProviderProps) {
 
             setData(response.data.user);
             router.push('/(auth-routes)/');
-        } catch (err) {
-            Alert.alert('Usuário ou senha incorretos');
+        } catch (error) {
+            console.log(error.message)
+            if (error.message === 'Request failed with status code 402') {
+                Alert.alert('Usuário fora do uso registrado');
+            } else {
+                Alert.alert('Usuário ou senha incorretos');
+            }
         }
     }
 
