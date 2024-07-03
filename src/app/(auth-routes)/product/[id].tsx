@@ -1,15 +1,14 @@
 import { ProductList } from "@/DTO/ProductDTO";
+import { Complement } from "@/DTO/ComplementsDTO";
 import { api } from "@/app/api/api";
 import { ProductCartProps, useCartStore } from "@/app/store/product-cart";
-import { products } from "@/app/utils/data/products";
-import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { Button } from "@/components/button";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList } from "react-native";
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CardComplements } from "@/components/complement-card";
 
 import colors from "tailwindcss/colors";
 
@@ -19,6 +18,7 @@ export default function Product() {
     const cartStore = useCartStore();
 
     const [product, setProduct] = useState<ProductList>({} as ProductList);
+    const [complements, setComplements] = useState<Complement[]>([]);
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState(0);
 
@@ -84,9 +84,18 @@ export default function Product() {
 
                 <View className="flex-1 items-start border-b-[1px] border-gray-400 space-y-3 p-3">
                     <Text>Complementos</Text>
-{/*                     <FlatList 
-                        data={}
-                    /> */}
+                    <FlatList
+                        data={complements}
+                        keyExtractor={(item) => item.ITEN}
+                        renderItem={({ item }) => (
+                            <CardComplements
+                                complementDescription={item.DESCRICAO_COMPLEMENTO}
+                            />
+                        )}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ gap: 12, paddingHorizontal: 20 }}
+                    />
                 </View>
 
                 <View className="flex-1 items-start justify-center p-3">
