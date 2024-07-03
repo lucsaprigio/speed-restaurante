@@ -19,6 +19,7 @@ export default function Product() {
 
     const [product, setProduct] = useState<ProductList>({} as ProductList);
     const [complements, setComplements] = useState<Complement[]>([]);
+    const [descriptionComplement, setDescriptionComponent] = useState([]);
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState(0);
 
@@ -29,6 +30,24 @@ export default function Product() {
             setProduct(response.data.product);
         } catch (err) {
             console.log(err);
+        }
+    }
+
+    async function handleShowComplenent() {
+        try {
+            const response = await api.get(`/complement/${id}`);
+
+            setComplements(response.data.complements);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    function handleRemoveItem(description: string) {
+        if (descriptionComplement.length === 0) {
+            return descriptionComplement.push(`Removido(s) ${description}; `);
+        } else {
+            return descriptionComplement.push(` ${description}; `);
         }
     }
 
@@ -58,6 +77,7 @@ export default function Product() {
         setTotal(Number(product?.VR_UNITARIO) * quantity);
 
         handleShowProduct();
+        handleShowComplenent();
     }, [product, quantity]);
 
     return (
@@ -84,18 +104,22 @@ export default function Product() {
 
                 <View className="flex-1 items-start border-b-[1px] border-gray-400 space-y-3 p-3">
                     <Text>Complementos</Text>
-                    <FlatList
-                        data={complements}
-                        keyExtractor={(item) => item.ITEN}
-                        renderItem={({ item }) => (
-                            <CardComplements
-                                complementDescription={item.DESCRICAO_COMPLEMENTO}
-                            />
-                        )}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ gap: 12, paddingHorizontal: 20 }}
-                    />
+                    <View>
+                        {
+                            complements && complements.map((item) => (
+                                <CardComplements
+                                    id={item.ITEN}
+                                    complementDescription={item.DESCRICAO_COMPLEMENTO}
+                                    onRemove={() => handleRemoveItem(item.DESCRICAO_COMPLEMENTO)}
+                                />
+                            ))
+                        }
+                    </View>
+                    <View>
+                        <Text>
+                            {descriptionComplement}
+                        </Text>
+                    </View>
                 </View>
 
                 <View className="flex-1 items-start justify-center p-3">
