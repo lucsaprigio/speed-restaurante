@@ -19,7 +19,8 @@ export default function Product() {
 
     const [product, setProduct] = useState<ProductList>({} as ProductList);
     const [complements, setComplements] = useState<Complement[]>([]);
-    const [descriptionComplement, setDescriptionComponent] = useState([]);
+    const [items, setItems] = useState<string[]>([]);
+    const [descriptionComplement, setDescriptionComplement] = useState<string[]>([]);
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState(0);
 
@@ -43,12 +44,24 @@ export default function Product() {
         }
     }
 
+
+
+    function handleAddItem(description: string) {
+        let updatedDescriptionComplement = descriptionComplement.filter(item => item !== ` ${description};`);
+        setDescriptionComplement(updatedDescriptionComplement);
+        setItems(prevItems => prevItems.filter(item => item !== description));
+        console.log(updatedDescriptionComplement)
+    }
+
     function handleRemoveItem(description: string) {
-        if (descriptionComplement.length === 0) {
-            return descriptionComplement.push(`Removido(s) ${description}; `);
-        } else {
-            return descriptionComplement.push(` ${description}; `);
-        }
+        setDescriptionComplement(prev => {
+            const updatedDescriptionComplement = [...prev];
+            updatedDescriptionComplement.push(` ${description};`);
+            console.log(updatedDescriptionComplement)
+            return updatedDescriptionComplement;
+        });
+
+        setItems(prevItems => prevItems.filter(item => item !== description));
     }
 
     function handleGoBack() {
@@ -58,11 +71,13 @@ export default function Product() {
     function handleAddQuantityProduct() {
         setQuantity(prevQuantity => prevQuantity + 1);
         setTotal(Number(product?.VR_UNITARIO) * quantity);
+        console.log(items)
     }
 
     function handleRemoveQuantityProduct() {
         setQuantity(prevQuantity => prevQuantity > 0 ? prevQuantity - 1 : 0);
         setTotal(Number(product?.VR_UNITARIO) * quantity);
+        console.log(items)
     }
 
     function handleAddToCart() {
@@ -78,7 +93,7 @@ export default function Product() {
 
         handleShowProduct();
         handleShowComplenent();
-    }, [product, quantity]);
+    }, [quantity]);
 
     return (
         <>
@@ -108,17 +123,17 @@ export default function Product() {
                         {
                             complements && complements.map((item) => (
                                 <CardComplements
+                                    key={item.ITEN}
                                     id={item.ITEN}
                                     complementDescription={item.DESCRICAO_COMPLEMENTO}
+                                    onAdd={() => handleAddItem(item.DESCRICAO_COMPLEMENTO)}
                                     onRemove={() => handleRemoveItem(item.DESCRICAO_COMPLEMENTO)}
                                 />
                             ))
                         }
                     </View>
                     <View>
-                        <Text>
-                            {descriptionComplement}
-                        </Text>
+                        {descriptionComplement.length > 0 && <Text>Removido(s) {descriptionComplement}</Text>}
                     </View>
                 </View>
 

@@ -9,17 +9,19 @@ type CardComplementsProps = TouchableOpacityProps & {
     id: string;
     complementDescription: string;
     quantity?: number;
-    onAdd?: () => void;
+    onAdd: () => void;
     onRemove: () => void;
 }
 
-export function CardComplements({ complementDescription, id, onRemove, onAdd, quantity = 1 }: CardComplementsProps) {
+export function CardComplements({ complementDescription, id, onRemove, onAdd }: CardComplementsProps) {
+    const [quantity, setQuantity] = useState(1);
+
     function itemRemoved() {
-        return quantity = 0
+        return setQuantity(0)
     }
 
     function itemAdded() {
-        return quantity = 1
+        return setQuantity(1)
     }
 
     return (
@@ -27,6 +29,7 @@ export function CardComplements({ complementDescription, id, onRemove, onAdd, qu
             <TouchableOpacity className={
                 clsx("", quantity === 0 ? "opacity-100" : "opacity-20")}
                 onPress={() => { onAdd(), itemAdded() }}
+                disabled={quantity === 1}
             >
                 <MaterialIcons name="add-circle" size={28} color={colors.blue[950]} />
             </TouchableOpacity>
@@ -35,7 +38,8 @@ export function CardComplements({ complementDescription, id, onRemove, onAdd, qu
             </View>
             <TouchableOpacity className={
                 clsx("", quantity === 1 ? "opacity-100" : "opacity-20")}
-                onPress={() => { onRemove }}
+                disabled={quantity === 0}
+                onPress={() => { onRemove(), itemRemoved() }}
             >
                 <MaterialIcons name="remove-circle" size={28} color={colors.blue[950]} />
             </TouchableOpacity>
