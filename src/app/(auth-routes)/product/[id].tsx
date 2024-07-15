@@ -70,7 +70,7 @@ export default function Product() {
 
     function handleAddQuantityProduct() {
         setQuantity(prevQuantity => prevQuantity + 1);
-        setTotal(Number(product?.VR_UNITARIO) * quantity);
+        setTotal(Number(product?.VR_UNITARIO) * quantity);''
         console.log(items)
     }
 
