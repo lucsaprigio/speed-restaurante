@@ -6,9 +6,10 @@ import { Button } from "@/components/button";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CardComplements } from "@/components/complement-card";
+import { CardAdditional } from "@/components/additional-card";
 
 import colors from "tailwindcss/colors";
 
@@ -19,6 +20,8 @@ export default function Product() {
 
     const [product, setProduct] = useState<ProductList>({} as ProductList);
     const [complements, setComplements] = useState<Complement[]>([]);
+    const [complementsFiltered, setComplementsFiltered] = useState<Complement[]>([]);
+    const [additional, setAdditional] = useState<Complement[]>([]);
     const [items, setItems] = useState<string[]>([]);
     const [descriptionComplement, setDescriptionComplement] = useState<string[]>([]);
     const [quantity, setQuantity] = useState(1);
@@ -39,25 +42,28 @@ export default function Product() {
             const response = await api.get(`/complement/${id}`);
 
             setComplements(response.data.complements);
+
+            const complementFilter = complements.filter(item => item.ADICIONAL === 'N');
+            const complementAdditional = complements.filter(item => item.ADICIONAL === 'S');
+
+            setComplementsFiltered(complementFilter);
+            setAdditional(complementAdditional);
+
         } catch (err) {
             console.log(err)
         }
     }
 
-
-
     function handleAddItem(description: string) {
         let updatedDescriptionComplement = descriptionComplement.filter(item => item !== ` ${description};`);
         setDescriptionComplement(updatedDescriptionComplement);
         setItems(prevItems => prevItems.filter(item => item !== description));
-        console.log(updatedDescriptionComplement)
     }
 
     function handleRemoveItem(description: string) {
         setDescriptionComplement(prev => {
             const updatedDescriptionComplement = [...prev];
             updatedDescriptionComplement.push(` ${description};`);
-            console.log(updatedDescriptionComplement)
             return updatedDescriptionComplement;
         });
 
@@ -70,20 +76,17 @@ export default function Product() {
 
     function handleAddQuantityProduct() {
         setQuantity(prevQuantity => prevQuantity + 1);
-        setTotal(Number(product?.VR_UNITARIO) * quantity);''
-        console.log(items)
+        setTotal(Number(product?.VR_UNITARIO) * quantity); ''
     }
 
     function handleRemoveQuantityProduct() {
         setQuantity(prevQuantity => prevQuantity > 0 ? prevQuantity - 1 : 0);
         setTotal(Number(product?.VR_UNITARIO) * quantity);
-        console.log(items)
     }
 
     function handleAddToCart() {
         if (product) {
             cartStore.add(product as ProductCartProps, quantity);
-            console.log({ ...product, quantity })
             navigation.goBack();
         }
     }
@@ -91,8 +94,8 @@ export default function Product() {
     useEffect(() => {
         setTotal(Number(product?.VR_UNITARIO) * quantity);
 
-        handleShowProduct();
         handleShowComplenent();
+        handleShowProduct();
     }, [quantity]);
 
     return (
@@ -121,7 +124,7 @@ export default function Product() {
                     <Text>Complementos</Text>
                     <View>
                         {
-                            complements && complements.map((item) => (
+                            complementsFiltered && complementsFiltered.map((item) => (
                                 <CardComplements
                                     key={item.ITEN}
                                     id={item.ITEN}
@@ -136,6 +139,21 @@ export default function Product() {
                         {descriptionComplement.length > 0 && <Text>Removido(s) {descriptionComplement}</Text>}
                     </View>
                 </View>
+                <View className="flex-1 items-start border-b-[1px] border-gray-400 space-y-3 p-3">
+                    <Text>Adicionais</Text>
+                    {
+                        additional && additional.map((item) => (
+                            <CardAdditional
+                                key={item.ITEN}
+                                id={item.ITEN}
+                                additionalDescription={item.DESCRICAO_COMPLEMENTO}
+                                onAdd={() => handleAddItem(item.DESCRICAO_COMPLEMENTO)}
+                                onRemove={() => handleRemoveItem(item.DESCRICAO_COMPLEMENTO)}
+                            />
+                        ))
+                    }
+                </View>
+
 
                 <View className="flex-1 items-start justify-center p-3">
                     <Text className="my-3"> <Feather name="paperclip" color={colors.gray[500]} />Observações:</Text>
