@@ -27,30 +27,56 @@ export default function Product() {
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState(0);
 
-    async function handleShowProduct() {
-        try {
-            const response = await api.get(`/product/${id}`);
-
-            setProduct(response.data.product);
-        } catch (err) {
-            console.log(err);
+    /*     async function handleShowProduct() {
+            try {
+                const response = await api.get(`/product/${id}`);
+    
+                setProduct(response.data.product);
+    
+            } catch (err) {
+                console.log(err);
+            }
         }
-    }
+    
+        async function handleShowComplenent() {
+            try {
+                const response = await api.get(`/complement/${id}`);
+    
+                setComplements(response.data.complements);
+    
+                const complementFilter = complements.filter(item => item.ADICIONAL === 'N');
+                const complementAdditional = complements.filter(item => item.ADICIONAL === 'S');
+    
+                setComplementsFiltered(complementFilter);
+                setAdditional(complementAdditional);
+    
+            } catch (err) {
+                console.log(err)
+            }
+        }
+     */
 
-    async function handleShowComplenent() {
+    async function fetchProductAndComplements() {
         try {
-            const response = await api.get(`/complement/${id}`);
+            const [productResponse, complementResponse] = await Promise.all([
+                api.get(`/product/${id}`),
+                api.get(`/complement/${id}`)
+            ]);
 
-            setComplements(response.data.complements);
+            setProduct(productResponse.data.product);
+
+            const complements = complementResponse.data.complements;
+            setComplements(complements);
 
             const complementFilter = complements.filter(item => item.ADICIONAL === 'N');
             const complementAdditional = complements.filter(item => item.ADICIONAL === 'S');
 
             setComplementsFiltered(complementFilter);
             setAdditional(complementAdditional);
+            console.log(complements)
 
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     }
 
@@ -94,9 +120,10 @@ export default function Product() {
     useEffect(() => {
         setTotal(Number(product?.VR_UNITARIO) * quantity);
 
-        handleShowComplenent();
-        handleShowProduct();
-    }, [quantity]);
+        fetchProductAndComplements();
+        // handleShowComplenent();
+        // handleShowProduct();
+    }, [total, quantity]);
 
     return (
         <>
@@ -149,11 +176,11 @@ export default function Product() {
                                 additionalDescription={item.DESCRICAO_COMPLEMENTO}
                                 onAdd={() => handleAddItem(item.DESCRICAO_COMPLEMENTO)}
                                 onRemove={() => handleRemoveItem(item.DESCRICAO_COMPLEMENTO)}
+                                price={item.VR_UNIT.toFixed(2)}
                             />
                         ))
                     }
                 </View>
-
 
                 <View className="flex-1 items-start justify-center p-3">
                     <Text className="my-3"> <Feather name="paperclip" color={colors.gray[500]} />Observações:</Text>
@@ -162,7 +189,7 @@ export default function Product() {
 
 
             </ScrollView>
-            <View className="fixed flex-1 flex-row bottom-0 bg-gray-200 py-5">
+            <View className="flex-1 flex-row bottom-0 bg-gray-200 py-5">
                 <View className="flex flex-row items-center justify-center gap-3">
                     <TouchableOpacity onPress={handleRemoveQuantityProduct}>
                         <MaterialIcons size={32} name="remove" color={colors.blue[950]} />

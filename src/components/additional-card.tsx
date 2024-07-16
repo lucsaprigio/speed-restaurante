@@ -9,12 +9,13 @@ type CardComplementsProps = TouchableOpacityProps & {
     id: string;
     additionalDescription: string;
     quantity?: number;
+    price?: string;
     onAdd: () => void;
     onRemove: () => void;
 }
 
-export function CardAdditional({ additionalDescription, id, onRemove, onAdd }: CardComplementsProps) {
-    const [quantity, setQuantity] = useState(1);
+export function CardAdditional({ additionalDescription, id, onRemove, onAdd, price }: CardComplementsProps) {
+    const [quantity, setQuantity] = useState(0);
 
     function itemRemoved() {
         return setQuantity(0)
@@ -25,7 +26,9 @@ export function CardAdditional({ additionalDescription, id, onRemove, onAdd }: C
     }
 
     return (
-        <View key={id} className="flex flex-row items-center justify-between p-2 border-b-[1px] border-gray-400">
+        <View
+            key={id}
+            className="flex flex-row items-center justify-between p-2 border-b-[1px] border-gray-400">
             <TouchableOpacity className={
                 clsx("", quantity === 0 ? "opacity-100" : "opacity-20")}
                 onPress={() => { onAdd(), itemAdded() }}
@@ -33,11 +36,12 @@ export function CardAdditional({ additionalDescription, id, onRemove, onAdd }: C
             >
                 <MaterialIcons name="add-circle" size={28} color={colors.blue[950]} />
             </TouchableOpacity>
-            <View className="flex justify-center">
-                <Text className="text-md">{additionalDescription}</Text>
+            <View className="flex items-center justify-center">
+                <Text className="w-20 text-md text-center">{additionalDescription}</Text>
+                <Text className="text-gray-600">R$ {price}</Text>
             </View>
             <TouchableOpacity className={
-                clsx("", quantity === 1 ? "opacity-100" : "opacity-20")}
+                clsx("", quantity >= 1 ? "opacity-100" : "opacity-20")}
                 disabled={quantity === 0}
                 onPress={() => { onRemove(), itemRemoved() }}
             >

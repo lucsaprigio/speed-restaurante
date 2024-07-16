@@ -34,7 +34,7 @@ export function CardComplements({ complementDescription, id, onRemove, onAdd }: 
                 <MaterialIcons name="add-circle" size={28} color={colors.blue[950]} />
             </TouchableOpacity>
             <View className="flex justify-center">
-                <Text className="text-md">{complementDescription}</Text>
+                <Text className="w-20 text-center text-md">{complementDescription}</Text>
             </View>
             <TouchableOpacity className={
                 clsx("", quantity === 1 ? "opacity-100" : "opacity-20")}
