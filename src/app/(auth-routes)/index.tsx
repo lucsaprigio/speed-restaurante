@@ -9,7 +9,6 @@ export default function Painel() {
     const { signOut } = useAuth();
     const router = useRouter();
     const { id } = useLocalSearchParams();
-    console.log(id);
 
     const [refresh, setRefresh] = useState(false);
 

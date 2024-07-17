@@ -45,6 +45,10 @@ export default function Product() {
             setComplementsFiltered(complementFilter);
             setAdditional(complementAdditional);
 
+
+            const initialtotal = Number(productResponse.data.product.VR_UNITARIO) * quantity;
+            setTotal(initialtotal)
+            console.log(total)
         } catch (err) {
             console.log(err);
         }
@@ -72,12 +76,27 @@ export default function Product() {
 
     function handleAddQuantityProduct() {
         setQuantity(prevQuantity => prevQuantity + 1);
-        setTotal(Number(product?.VR_UNITARIO) * quantity); ''
+        setTotal(prevTotal => prevTotal + product.VR_UNITARIO);
+        console.log(total)
     }
 
     function handleRemoveQuantityProduct() {
-        setQuantity(prevQuantity => prevQuantity > 0 ? prevQuantity - 1 : 0);
-        setTotal(Number(product?.VR_UNITARIO) * quantity);
+        if (quantity > 1) {
+            setQuantity(prevQuantity => prevQuantity > 0 ? prevQuantity - 1 : 0);
+            setTotal(prevTotal => prevTotal - product.VR_UNITARIO);
+        } else {
+            setQuantity(1);
+        }
+    }
+
+    function handleAddAdditional(price: number) {
+        setTotal(prevTotal => prevTotal + price * quantity);
+    }
+
+    function handleRemoveAdditional(price: number) {
+        if (product.VR_UNITARIO !== total) {
+            setTotal(prevTotal => prevTotal - price * quantity);
+        }
     }
 
     function handleAddToCart() {
@@ -88,10 +107,8 @@ export default function Product() {
     }
 
     useEffect(() => {
-        setTotal(Number(product?.VR_UNITARIO) * quantity);
-
         fetchProductAndComplements();
-    }, [total, quantity]);
+    }, [quantity]);
 
     return (
         <>
@@ -116,7 +133,7 @@ export default function Product() {
                 </View>
 
                 <View className="flex-1 items-start border-b-[1px] border-gray-400 space-y-3 p-3">
-                    <Text>Complementos</Text>
+                    <Text>Ingredientes</Text>
                     <View>
                         {
                             complementsFiltered && complementsFiltered.map((item) => (
@@ -124,7 +141,7 @@ export default function Product() {
                                     key={item.ITEN}
                                     id={item.ITEN}
                                     complementDescription={item.DESCRICAO_COMPLEMENTO}
-                                    onAdd={() => handleAddItem(item.DESCRICAO_COMPLEMENTO)}
+                                    onAdd={() => { handleAddItem(item.DESCRICAO_COMPLEMENTO) }}
                                     onRemove={() => handleRemoveItem(item.DESCRICAO_COMPLEMENTO)}
                                 />
                             ))
@@ -142,8 +159,8 @@ export default function Product() {
                                 key={item.ITEN}
                                 id={item.ITEN}
                                 additionalDescription={item.DESCRICAO_COMPLEMENTO}
-                                onAdd={() => { }}
-                                onRemove={() => { }}
+                                onAdd={() => handleAddAdditional(item.VR_UNIT)}
+                                onRemove={() => handleRemoveAdditional(item.VR_UNIT)}
                                 price={item.VR_UNIT.toFixed(2)}
                             />
                         ))
@@ -157,7 +174,7 @@ export default function Product() {
 
 
             </ScrollView>
-            <View className="flex-1 flex-row bottom-0 bg-gray-200 py-5">
+            <View className="fixed flex-row bottom-0 bg-gray-200 py-5">
                 <View className="flex flex-row items-center justify-center gap-3">
                     <TouchableOpacity onPress={handleRemoveQuantityProduct}>
                         <MaterialIcons size={32} name="remove" color={colors.blue[950]} />
