@@ -27,35 +27,6 @@ export default function Product() {
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState(0);
 
-    /*     async function handleShowProduct() {
-            try {
-                const response = await api.get(`/product/${id}`);
-    
-                setProduct(response.data.product);
-    
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    
-        async function handleShowComplenent() {
-            try {
-                const response = await api.get(`/complement/${id}`);
-    
-                setComplements(response.data.complements);
-    
-                const complementFilter = complements.filter(item => item.ADICIONAL === 'N');
-                const complementAdditional = complements.filter(item => item.ADICIONAL === 'S');
-    
-                setComplementsFiltered(complementFilter);
-                setAdditional(complementAdditional);
-    
-            } catch (err) {
-                console.log(err)
-            }
-        }
-     */
-
     async function fetchProductAndComplements() {
         try {
             const [productResponse, complementResponse] = await Promise.all([
@@ -73,7 +44,6 @@ export default function Product() {
 
             setComplementsFiltered(complementFilter);
             setAdditional(complementAdditional);
-            console.log(complements)
 
         } catch (err) {
             console.log(err);
@@ -121,8 +91,6 @@ export default function Product() {
         setTotal(Number(product?.VR_UNITARIO) * quantity);
 
         fetchProductAndComplements();
-        // handleShowComplenent();
-        // handleShowProduct();
     }, [total, quantity]);
 
     return (
@@ -166,7 +134,7 @@ export default function Product() {
                         {descriptionComplement.length > 0 && <Text>Removido(s) {descriptionComplement}</Text>}
                     </View>
                 </View>
-                <View className="flex-1 items-start border-b-[1px] border-gray-400 space-y-3 p-3">
+                <View className="flex-1 items-start border-b-[1px] border-gray-400 p-2">
                     <Text>Adicionais</Text>
                     {
                         additional && additional.map((item) => (
@@ -174,8 +142,8 @@ export default function Product() {
                                 key={item.ITEN}
                                 id={item.ITEN}
                                 additionalDescription={item.DESCRICAO_COMPLEMENTO}
-                                onAdd={() => handleAddItem(item.DESCRICAO_COMPLEMENTO)}
-                                onRemove={() => handleRemoveItem(item.DESCRICAO_COMPLEMENTO)}
+                                onAdd={() => { }}
+                                onRemove={() => { }}
                                 price={item.VR_UNIT.toFixed(2)}
                             />
                         ))

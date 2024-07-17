@@ -28,25 +28,29 @@ export function CardAdditional({ additionalDescription, id, onRemove, onAdd, pri
     return (
         <View
             key={id}
-            className="flex flex-row items-center justify-between p-2 border-b-[1px] border-gray-400">
-            <TouchableOpacity className={
-                clsx("", quantity === 0 ? "opacity-100" : "opacity-20")}
-                onPress={() => { onAdd(), itemAdded() }}
-                disabled={quantity === 1}
-            >
-                <MaterialIcons name="add-circle" size={28} color={colors.blue[950]} />
-            </TouchableOpacity>
-            <View className="flex items-center justify-center">
-                <Text className="w-20 text-md text-center">{additionalDescription}</Text>
-                <Text className="text-gray-600">R$ {price}</Text>
+            className="flex-1 flex-row items-center justify-between border-b-[1px] border-gray-400">
+            <View className="flex flex-row items-center justify-start w-full">
+                <Text className="text-md text-left">{additionalDescription}</Text>
+                <Text className="text-blue-800">R$ {price}</Text>
             </View>
-            <TouchableOpacity className={
-                clsx("", quantity >= 1 ? "opacity-100" : "opacity-20")}
-                disabled={quantity === 0}
-                onPress={() => { onRemove(), itemRemoved() }}
-            >
-                <MaterialIcons name="remove-circle" size={28} color={colors.blue[950]} />
-            </TouchableOpacity>
+
+            <View className="flex flex-row w-full">
+                <TouchableOpacity className={
+                    clsx("border-[1px] border-blue-950 rounder-sm", quantity >= 1 ? "opacity-100" : "opacity-0")}
+                    disabled={quantity === 0}
+                    onPress={() => { onRemove(), itemRemoved() }}
+                >
+                    <MaterialIcons name="remove" size={18} color={colors.blue[950]} />
+                </TouchableOpacity>
+                {quantity > 0 && <Text className="border-y-[1px] border-blue-950 rounder-sm">{quantity}</Text>}
+                <TouchableOpacity className={
+                    clsx("border-[1px] border-blue-950 rounder-sm", quantity === 0 ? "opacity-100" : "opacity-20")}
+                    onPress={() => { onAdd(), itemAdded() }}
+                    disabled={quantity === 1}
+                >
+                    <MaterialIcons name="add" size={18} color={colors.blue[950]} />
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
