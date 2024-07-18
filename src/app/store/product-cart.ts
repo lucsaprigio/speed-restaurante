@@ -5,11 +5,13 @@ import { ProductCartLaunch, ProductList } from '@/DTO/ProductDTO';
 
 export type ProductCartProps = ProductList & {
     quantity: number;
+    obs: string;
+    additional: string;
 }
 
 type StateProps = {
     products: ProductCartProps[];
-    add: (newProduct: ProductCartProps, quantity: number) => void;
+    add: (newProduct: ProductCartProps, quantity: number, additional: string | any, obs: string | any) => void;
     remove: (productId: string) => void;
     getProductsArray: () => ProductCartLaunch[];
     clear: () => void;
@@ -18,9 +20,9 @@ type StateProps = {
 export const useCartStore = create(persist<StateProps>((set, get) => ({
     products: [],
 
-    add: (newProduct: ProductCartProps, quantity: number) =>
+    add: (newProduct: ProductCartProps, quantity: number, additional: string | any, obs: string | any) =>
         set((state) => ({
-            products: add(state.products, newProduct, quantity)
+            products: add(state.products, newProduct, quantity, additional, obs)
         })),
 
     remove: (productId: string) =>
@@ -48,7 +50,7 @@ export const useCartStore = create(persist<StateProps>((set, get) => ({
     storage: createJSONStorage(() => AsyncStorage),
 }))
 
-function add(products: ProductCartProps[], newProduct: ProductList, quantity: number): ProductCartProps[] {
+function add(products: ProductCartProps[], newProduct: ProductList, quantity: number, additional: string, obs: string): ProductCartProps[] {
     const existingProduct = products.find(({ CD_PRODUTO }) => newProduct.CD_PRODUTO === CD_PRODUTO);
 
     if (existingProduct) {
@@ -59,7 +61,7 @@ function add(products: ProductCartProps[], newProduct: ProductList, quantity: nu
         );
     }
 
-    return [...products, { ...newProduct, quantity: quantity }];
+    return [...products, { ...newProduct, quantity: quantity, additional, obs }];
 }
 
 function remove(products: ProductCartProps[], productRemovedId: string) {

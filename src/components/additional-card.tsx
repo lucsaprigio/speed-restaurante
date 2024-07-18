@@ -8,21 +8,21 @@ import colors from "tailwindcss/colors";
 type CardComplementsProps = TouchableOpacityProps & {
     id: string;
     additionalDescription: string;
-    quantity?: number;
+    quantity: number;
     price?: string;
     onAdd: () => void;
     onRemove: () => void;
 }
 
-export function CardAdditional({ additionalDescription, id, onRemove, onAdd, price }: CardComplementsProps) {
-    const [quantity, setQuantity] = useState(0);
-
-    function itemRemoved() {
-        return setQuantity(quantity - 1);
-    }
+export function CardAdditional({ additionalDescription, id, onRemove, onAdd, price, quantity = 0 }: CardComplementsProps) {
+    const [isSelected, setIsSelected] = useState(false);
 
     function itemAdded() {
-        return setQuantity(quantity + 1);
+        return setIsSelected(true);
+    }
+
+    function itemRemoved() {
+        return setIsSelected(false);
     }
 
     return (
@@ -35,20 +35,23 @@ export function CardAdditional({ additionalDescription, id, onRemove, onAdd, pri
             </View>
 
             <View className="flex flex-row p-3">
-                <TouchableOpacity className={
-                    clsx("border-[1px] border-blue-950 rounder-sm", quantity >= 1 ? "opacity-100" : "opacity-0")}
-                    disabled={quantity === 0}
-                    onPress={() => { onRemove(), itemRemoved() }}
-                >
-                    <MaterialIcons name="remove" size={18} color={colors.blue[950]} />
-                </TouchableOpacity>
-                {quantity > 0 && <Text className="px-2 border-y-[1px] border-blue-950 rounder-sm">{quantity}</Text>}
-                <TouchableOpacity className={
-                    clsx("border-[1px] border-blue-950 rounder-sm")}
-                    onPress={() => { onAdd(), itemAdded() }}
-                >
-                    <MaterialIcons name="add" size={18} color={colors.blue[950]} />
-                </TouchableOpacity>
+                {
+                    !isSelected ? (
+                        <TouchableOpacity className={
+                            clsx("")}
+                            onPress={() => { onAdd(), itemAdded() }}
+                        >
+                            <MaterialIcons name="add" size={24} color={colors.blue[950]} />
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity className={
+                            clsx("")}
+                            onPress={() => { onRemove(), itemRemoved() }}
+                        >
+                            <MaterialIcons name="check-circle" size={24} color={colors.blue[950]} />
+                        </TouchableOpacity>
+                    )
+                }
             </View>
         </View>
     )

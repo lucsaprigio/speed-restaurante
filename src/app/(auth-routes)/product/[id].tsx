@@ -22,7 +22,10 @@ export default function Product() {
     const [complements, setComplements] = useState<Complement[]>([]);
     const [complementsFiltered, setComplementsFiltered] = useState<Complement[]>([]);
     const [additional, setAdditional] = useState<Complement[]>([]);
+    const [additionalQuantity, setAdditionalQuantity] = useState(0);
+    const [additionalTotal, setAdditionalTotal] = useState(0);
     const [items, setItems] = useState<string[]>([]);
+    const [additionalDescription, setAdditionalDescription] = useState<string[]>([]);
     const [descriptionComplement, setDescriptionComplement] = useState<string[]>([]);
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState(0);
@@ -48,7 +51,6 @@ export default function Product() {
 
             const initialtotal = Number(productResponse.data.product.VR_UNITARIO) * quantity;
             setTotal(initialtotal)
-            console.log(total)
         } catch (err) {
             console.log(err);
         }
@@ -75,40 +77,73 @@ export default function Product() {
     }
 
     function handleAddQuantityProduct() {
-        setQuantity(prevQuantity => prevQuantity + 1);
-        setTotal(prevTotal => prevTotal + product.VR_UNITARIO);
-        console.log(total)
+        if (additionalTotal === 0) {
+            setQuantity(prevQuantity => prevQuantity + 1);
+            setTotal(prevTotal => prevTotal + product.VR_UNITARIO);
+            console.log(`\n total: ${total}\n quantity: ${quantity} \n additionalQuantity: ${additionalQuantity} \n additionalTotal: ${additionalTotal}`)
+
+        } else {
+            setQuantity(prevQuantity => prevQuantity + 1);
+            setTotal(prevTotal => prevTotal + product.VR_UNITARIO + additionalTotal);
+            console.log(`\n total: ${total}\n quantity: ${quantity} \n additionalQuantity: ${additionalQuantity} \n additionalTotal: ${additionalTotal}`)
+        }
     }
 
     function handleRemoveQuantityProduct() {
-        if (quantity > 1) {
+        if (quantity === 1) {
+            setQuantity(1)
+        } else if (additionalTotal > 0) {
+            setQuantity(prevQuantity => prevQuantity > 0 ? prevQuantity - 1 : 0);
+            setTotal(prevTotal => prevTotal - product.VR_UNITARIO - additionalQuantity);
+        } else {
             setQuantity(prevQuantity => prevQuantity > 0 ? prevQuantity - 1 : 0);
             setTotal(prevTotal => prevTotal - product.VR_UNITARIO);
+        }
+        console.log(`\n total: ${total}\n quantity: ${quantity} \n additionalQuantity: ${additionalQuantity} \n additionalTotal: ${additionalTotal}`)
+    }
+
+    function handleAddAdditional(price: number, description: string) {
+        if (quantity > 1) {
+            setAdditionalTotal(prevPrice => prevPrice + price * quantity);
+            setAdditionalQuantity(addQuant => addQuant + 1);
+            setTotal(prevTotal => prevTotal + price * quantity);
+
+            setAdditionalDescription(prevDescriptions => [
+                ...prevDescriptions,
+                `${description} - R$${price.toFixed(2)}`
+            ]);
+            console.log()
         } else {
-            setQuantity(1);
+            setAdditionalTotal(prevPrice => prevPrice + price);
+            setAdditionalQuantity(addQuant => addQuant + 1);
+            setTotal(prevTotal => prevTotal + price);
+            setAdditionalDescription(prevDescriptions => [
+                ...prevDescriptions,
+                `${description} - R$${price.toFixed(2)}`
+            ])
+            console.log(additionalDescription)
         }
-    }
+    };
 
-    function handleAddAdditional(price: number) {
-        setTotal(prevTotal => prevTotal + price * quantity);
-    }
-
-    function handleRemoveAdditional(price: number) {
-        if (product.VR_UNITARIO !== total) {
-            setTotal(prevTotal => prevTotal - price * quantity);
-        }
+    function handleRemoveAdditional(price: number, description: string) {
+        setAdditionalTotal(prevPrice => prevPrice - price);
+        setTotal(prevTotal => prevTotal - price * quantity);
+        setAdditionalQuantity(addQuant => addQuant - 1);
     }
 
     function handleAddToCart() {
         if (product) {
-            cartStore.add(product as ProductCartProps, quantity);
+            const descriptionComplementString = descriptionComplement.join(', ');
+            const additionalDescriptionString = additionalDescription.join(', ');
+            
+            cartStore.add(product as ProductCartProps, quantity, [...descriptionComplement], [...additionalDescription]);
             navigation.goBack();
         }
     }
 
     useEffect(() => {
         fetchProductAndComplements();
-    }, [quantity]);
+    }, []);
 
     return (
         <>
@@ -142,7 +177,7 @@ export default function Product() {
                                     id={item.ITEN}
                                     complementDescription={item.DESCRICAO_COMPLEMENTO}
                                     onAdd={() => { handleAddItem(item.DESCRICAO_COMPLEMENTO) }}
-                                    onRemove={() => handleRemoveItem(item.DESCRICAO_COMPLEMENTO)}
+                                    onRemove={() => { handleRemoveItem(item.DESCRICAO_COMPLEMENTO) }}
                                 />
                             ))
                         }
@@ -159,8 +194,9 @@ export default function Product() {
                                 key={item.ITEN}
                                 id={item.ITEN}
                                 additionalDescription={item.DESCRICAO_COMPLEMENTO}
-                                onAdd={() => handleAddAdditional(item.VR_UNIT)}
-                                onRemove={() => handleRemoveAdditional(item.VR_UNIT)}
+                                quantity={additionalQuantity}
+                                onAdd={() => handleAddAdditional(item.VR_UNIT, item.DESCRICAO_COMPLEMENTO)}
+                                onRemove={() => handleRemoveAdditional(item.VR_UNIT, item.DESCRICAO_COMPLEMENTO)}
                                 price={item.VR_UNIT.toFixed(2)}
                             />
                         ))
