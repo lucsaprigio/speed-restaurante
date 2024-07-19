@@ -13,7 +13,7 @@ import { CardAdditional } from "@/components/additional-card";
 
 import colors from "tailwindcss/colors";
 
-export default function Product() {
+export default function UpdateSaleProduct() {
     const navigation = useNavigation();
     const { id } = useLocalSearchParams();
     const cartStore = useCartStore();

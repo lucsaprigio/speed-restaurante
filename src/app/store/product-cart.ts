@@ -7,11 +7,12 @@ export type ProductCartProps = ProductList & {
     quantity: number;
     obs: string;
     additional: string;
+    total: number;
 }
 
 type StateProps = {
     products: ProductCartProps[];
-    add: (newProduct: ProductCartProps, quantity: number, additional: string | any, obs: string | any) => void;
+    add: (newProduct: ProductCartProps, quantity: number, additional: string, obs: string, total: number) => void;
     remove: (productId: string) => void;
     getProductsArray: () => ProductCartLaunch[];
     clear: () => void;
@@ -20,9 +21,9 @@ type StateProps = {
 export const useCartStore = create(persist<StateProps>((set, get) => ({
     products: [],
 
-    add: (newProduct: ProductCartProps, quantity: number, additional: string | any, obs: string | any) =>
+    add: (newProduct: ProductCartProps, quantity: number, additional: string, obs: string, total: number) =>
         set((state) => ({
-            products: add(state.products, newProduct, quantity, additional, obs)
+            products: add(state.products, newProduct, quantity, additional, obs, total)
         })),
 
     remove: (productId: string) =>
@@ -37,9 +38,10 @@ export const useCartStore = create(persist<StateProps>((set, get) => ({
         return state.products.map((product) => ({
             productId: product.CD_PRODUTO,
             productDescription: product.DESCRICAO_PRODUTO,
-            obsProduct: '',
+            obsProduct: product.obs,
+            additional: product.additional,
             price: product.VR_UNITARIO,
-            totalProduct: product.VR_UNITARIO * product.quantity,
+            totalProduct: product.total,
             descount: 0,
             quantity: product.quantity
         }));
@@ -50,7 +52,7 @@ export const useCartStore = create(persist<StateProps>((set, get) => ({
     storage: createJSONStorage(() => AsyncStorage),
 }))
 
-function add(products: ProductCartProps[], newProduct: ProductList, quantity: number, additional: string, obs: string): ProductCartProps[] {
+function add(products: ProductCartProps[], newProduct: ProductList, quantity: number, additional: string, obs: string, total: number): ProductCartProps[] {
     const existingProduct = products.find(({ CD_PRODUTO }) => newProduct.CD_PRODUTO === CD_PRODUTO);
 
     if (existingProduct) {
@@ -61,7 +63,7 @@ function add(products: ProductCartProps[], newProduct: ProductList, quantity: nu
         );
     }
 
-    return [...products, { ...newProduct, quantity: quantity, additional, obs }];
+    return [...products, { ...newProduct, quantity: quantity, additional, obs, total }];
 }
 
 function remove(products: ProductCartProps[], productRemovedId: string) {

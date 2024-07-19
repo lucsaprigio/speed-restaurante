@@ -31,7 +31,6 @@ export default function Sale() {
     async function handleListProducts() {
         try {
             const response = await api.get('/products');
-            console.log(response.data);
 
             setProductList(response.data);
         } catch (err) {
@@ -88,7 +87,7 @@ export default function Sale() {
                         <Feather name="chevron-left" size={28} color={colors.gray[200]} />
                     </TouchableOpacity>
                     <Text className="text-gray-200">
-                        Mesa {saleId}
+                        Mesa {id}
                     </Text>
                     <View>
                         <SaleCart quantity={cartStore.products.length} onPress={() => { handleCloseSale(lastSaleId, id) }} />

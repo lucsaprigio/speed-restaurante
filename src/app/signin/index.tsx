@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Image, RefreshControl, ScrollView, Text, View } from "react-native";
+import { Alert, BackHandler, Image, RefreshControl, ScrollView, Text, View } from "react-native";
 import { useAuth } from "../hooks/auth";
 
 import { api } from "../api/api";
@@ -49,6 +49,16 @@ export default function SignIn() {
 
     useEffect(() => {
         handleGetUsers()
+
+        const disableBackHandler = () => {
+            return true; // Impede a ação padrão do botão de voltar
+        };
+
+        BackHandler.addEventListener('hardwareBackPress', disableBackHandler);
+
+        return () => {
+            BackHandler.removeEventListener('hardwareBackPress', disableBackHandler);
+        };
     }, []);
 
     return (

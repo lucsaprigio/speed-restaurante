@@ -1,21 +1,20 @@
-import { Alert, FlatList, Text, TouchableOpacity } from "react-native";
+import { FlatList, Text, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import colors from "tailwindcss/colors";
+import { Product } from "../../../../components/product";
 import { CategoryButton } from "../../../../components/category-button";
 import { useCartStore } from "@/app/store/product-cart";
+import { SaleCart } from "@/components/sale-cart";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { api } from "@/app/api/api";
 import { ProductList } from "@/DTO/ProductDTO";
-import { Loading } from "@/components/loading";
 import { Category } from "@/DTO/CategoryDTO";
-import { ProductCardUpdate } from "@/components/card-product-update";
-import { Button } from "@/components/button";
 
-export default function UpdateSale() {
+export default function Sale() {
     const router = useRouter();
     const cartStore = useCartStore();
     const { id, saleId, totalSale } = useLocalSearchParams();
@@ -23,11 +22,8 @@ export default function UpdateSale() {
     const [category, setCategory] = useState('');
     const [categoryList, setCategoryList] = useState<Category[]>([]);
     const [productList, setProductList] = useState<ProductList[]>([]);
+
     const [filteredProducts, setFilteredProducts] = useState<ProductList[]>([]);
-
-
-    const totalCart = Number(totalSale);
-    const totalToBackend = cartStore.products.reduce((total, product) => totalCart + total + product.VR_UNITARIO * product.quantity, 0);
 
     async function handleListProducts() {
         try {
@@ -50,61 +46,26 @@ export default function UpdateSale() {
         }
     };
 
-
-    function handleAddToCart(CD_PRODUTO: string, CD_CATEGORIA: string, DESCRICAO_CATEGORIA: string, SUBDESCRICAO_PRODUTO: string, DESCRICAO_PRODUTO: string, VR_UNITARIO: number, quantity: number) {
-        cartStore.add({ CD_PRODUTO, CD_CATEGORIA, DESCRICAO_CATEGORIA, SUBDESCRICAO_PRODUTO, DESCRICAO_PRODUTO, VR_UNITARIO, quantity }, quantity);
-    }
-
-
     function handleGoBack() {
         return router.back();
     };
 
-    function handleRemoveItem(CD_PRODUTO: string) {
-        return cartStore.remove(CD_PRODUTO)
-    }
+    function handleEditProduct(id: string) {
+        router.push(`/update-sale-product/${id}`)
+    };
 
     function handleCategorySelect(selectedCategory: string) {
         setCategory(selectedCategory);
 
-        const productsFiltered = productList.filter(product => selectedCategory === product.DESCRICAO_CATEGORIA);
+        const productsFiltered = productList.filter(product => selectedCategory === product.DESCRICAO_PRODUTO);
 
         setFilteredProducts(productsFiltered);
     };
 
-    async function handleUpdateSale() {
-        try {
-            console.log(saleId);
-            await api.post(`/update-sale/${saleId}`, {
-                tableId: id,
-                obs: '',
-                closed: 'N',
-                total: totalToBackend,
-                launchs: cartStore.getProductsArray()
-            });
-        } catch (err) {
-            console.log(err)
-        }
-    }
 
-
-    function handleCloseSale() {
-        Alert.alert("Atualizar pedido", 'Deseja atualizar o pedido?', [
-            {
-                text: "Cancelar"
-            },
-            {
-                text: "Atualizar",
-                onPress: () => {
-                    // Aqui vai as funções da rota que vou criar
-                    handleUpdateSale();
-                    cartStore.clear();
-                    router.push('/(auth-routes)/');
-                }
-            }
-        ]
-        )
-    }
+    function handleUpdateSale(saleId: string | any, id: string | any) {
+        router.push({ pathname: `/sale/close-updated-sale/`, params: { saleId, id, totalSale } });
+    };
 
     useEffect(() => {
         setFilteredProducts(productList);
@@ -126,7 +87,7 @@ export default function UpdateSale() {
                         Mesa {id}
                     </Text>
                     <View>
-
+                        <SaleCart quantity={cartStore.products.length} onPress={() => { handleUpdateSale(saleId, id) }} />
                     </View>
                 </View>
             </SafeAreaView>
@@ -172,46 +133,18 @@ export default function UpdateSale() {
                     const productInCart = cartStore.products.find(cartItem => cartItem.CD_PRODUTO === product.item.CD_PRODUTO);
                     const quantityInCart = productInCart ? productInCart.quantity : 0;
                     return (
-                        <ProductCardUpdate
-                            title={product.item.DESCRICAO_PRODUTO}
-                            subtitle={product.item.DESCRICAO_PRODUTO}
+                        <Product
+                            title={product.item.DESCRICAO_PRODUTO.toUpperCase()}
+                            subtitle={product.item.DESCRICAO_PRODUTO.toUpperCase()}
                             price={formatCurrency(product.item.VR_UNITARIO)}
-                            add={() => {
-                                handleAddToCart(
-                                    product.item.CD_PRODUTO,
-                                    product.item.CD_CATEGORIA,
-                                    product.item.DESCRICAO_CATEGORIA,
-                                    product.item.DESCRICAO_PRODUTO,
-                                    product.item.SUBDESCRICAO_PRODUTO,
-                                    product.item.VR_UNITARIO,
-                                    1
-                                )
-                            }}
-                            remove={() => {
-                                handleRemoveItem(product.item.CD_PRODUTO)
-                            }}
-                            quantity={quantityInCart}
-                        />
+                            action={() => handleEditProduct(product.item.CD_PRODUTO)}
+                            quantity={quantityInCart} />
                     )
                 }
                 }
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 100 }}
             />
-            {
-                cartStore.products.length > 0 && (
-                    <View className="fixed bottom-0 p-3">
-                        <Button onPress={handleCloseSale}>
-                            <Button.Text>
-                                Atualizar pedido
-                            </Button.Text>
-                            <Button.Icon>
-                                <MaterialIcons name="edit" color={colors.gray[50]} size={24} />
-                            </Button.Icon>
-                        </Button>
-                    </View>
-                )
-            }
         </>
     )
 }

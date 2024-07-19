@@ -14,6 +14,8 @@ export default function ShowSale() {
     const [saleLaunch, setSaleLaunch] = useState<ProductLaunchList[]>([]);
     const [total, setTotal] = useState(0);
 
+    console.log(id, saleId);
+
     function handleGoBack() {
         return router.back();
     };
@@ -25,7 +27,6 @@ export default function ShowSale() {
     async function handleGetSale() {
         try {
             const response = await api.get(`/sale/${saleId}`);
-            console.log(response.data);
 
             setTotal(response.data[0].TOTAL);
             setSaleLaunch(response.data);
@@ -35,7 +36,7 @@ export default function ShowSale() {
     };
 
     useEffect(() => {
-        // handleGetSale()
+        handleGetSale()
     }, []);
 
     return (
@@ -61,13 +62,14 @@ export default function ShowSale() {
                         <View className="bg-gray-200 p-3 space-y-1 my-2" key={product.CD_PRODUTO}>
                             <Text className="text-xl font-subtitle">{product.DESCRICAO_PRODUTO}</Text>
                             <Text className="text-gray-500">{product.OBS_PRODUTO || 'Sem observação'}</Text>
+                            <Text className="text-gray-500">{product.ADICIONAL_PRODUTO || ''}</Text>
                             <Text className="text-blue-950 font-bold">Qtd. {product.QTD_PRODUTO || 0}</Text>
                             <Text className="text-lg">Valor: R$ {product.UNIT_PRODUTO.toFixed(2) || 0}</Text>
                             <Text className="text-lg font-bold text-blue-950">Total: R$ {product.TOTAL_PRODUTO.toFixed(2) || 0}</Text>
                             {
-                                product.STATUS_LANCA === '0' ? (
-                                    <Text className="text-red-500">
-                                        Em andamento
+                                product.STATUS_LANCA !== 'P' ? (
+                                    <Text className="text-zinc-600">
+                                        Em produção
                                     </Text>) : (
                                     <Text className="text-green-500">
                                         Pronto

@@ -43,4 +43,5 @@ export type ProductLaunchList = {
     TOTAL_PRODUTO: number;
     OBS_PRODUTO: string;
     STATUS_LANCA: string;
+    ADICIONAL_PRODUTO: string;
 }

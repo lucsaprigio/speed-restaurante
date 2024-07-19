@@ -11,8 +11,8 @@ import { Alert, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "tailwindcss/colors";
 
-export default function CloseSale() {
-    const { id } = useLocalSearchParams();
+export default function CloseUpdatedSale() {
+    const { saleId, id, totalSale } = useLocalSearchParams();
     const { user } = useAuth();
     const cartStore = useCartStore();
     const router = useRouter();
@@ -32,10 +32,10 @@ export default function CloseSale() {
         try {
             const provider = user.userId;
 
-            await api.post('/new-sale', {
+            await api.post(`/update-sale/${saleId}`, {
                 tableId: id,
                 obs: '',
-                total: totalToBackend,
+                total: (Number(totalToBackend) + Number(totalSale)),
                 userId: provider,
                 launchs: cartStore.getProductsArray()
             });
@@ -47,14 +47,13 @@ export default function CloseSale() {
     }
 
     function handleCloseSale() {
-        Alert.alert("Fechamento", 'Enviar à Cozinha?', [
+        Alert.alert("Atualizar Pedido", 'Deseja atualizar o pedido?', [
             {
                 text: "Cancelar"
             },
             {
-                text: "Fechar Pedido",
+                text: "Atualizar Pedido",
                 onPress: () => {
-                    // Aqui vai as funções da rota que vou criar
                     handleCreateSale();
                     cartStore.clear();
                     router.push('/(auth-routes)/');
@@ -76,7 +75,7 @@ export default function CloseSale() {
                 <View></View>
             </SafeAreaView>
             <ScrollView>
-                <Text className="text-lg text-center font-heading text-blue-950 mt-3">Mesa {id && "não selecionada"}</Text>
+                <Text className="text-lg text-center font-heading text-blue-950 mt-3">Mesa {id ? id : "não selecionada"}</Text>
                 {
                     cartStore.products.map((item) => (
                         <ProductInCart
@@ -100,7 +99,7 @@ export default function CloseSale() {
                 </View>
                 <Button onPress={handleCloseSale}>
                     <Button.Text>
-                        Enviar para Cozinha
+                        Atualizar pedido
                     </Button.Text>
                 </Button>
             </View>

@@ -8,14 +8,28 @@ type ProductInCartProps = TouchableOpacityProps & {
     price: number;
     total: number;
     quantity: number;
+    obs: string;
+    additional: string;
 }
 
-export function ProductInCart({ price, quantity, subtitle, title, total, ...rest }: ProductInCartProps) {
+export function ProductInCart({ price, quantity, subtitle, title, total, obs, additional, ...rest }: ProductInCartProps) {
     return (
         <View className="flex flex-row items-center justify-between px-4 border-b-[1px] border-gray-400">
             <View className="flex justify-center">
                 <Text className="text-blue-800 text-lg font-subtitle">{title}</Text>
                 <Text className="text-md text-gray-600">{subtitle}</Text>
+                <Text className="text-md text-gray-600">
+                    Removido(s):
+                    {'\n'}
+                    {obs}
+                    {'\n'}
+                </Text>
+                <Text className="text-md text-gray-600">
+                    Adicionais:
+                    {'\n'}
+                    {additional}
+                    {'\n'}
+                </Text>
                 <View className="flex flex-row gap-3">
                     <Text className="text-md text-blue-800">Qtd. {quantity}</Text>
                     <Text className="text-blue-800 font-subtitle">{price}</Text>

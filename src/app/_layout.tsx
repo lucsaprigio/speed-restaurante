@@ -35,18 +35,6 @@ export default function Layout() {
     return router.push('/signin/')
   }
 
-  useEffect(() => {
-    const disableBackHandler = () => {
-      return true; // Impede a ação padrão do botão de voltar
-    };
-
-    BackHandler.addEventListener('hardwareBackPress', disableBackHandler);
-
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', disableBackHandler);
-    };
-  }, []);
-
 
   if (!fontsLoaded) {
     return <Loading />

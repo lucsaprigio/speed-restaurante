@@ -1,7 +1,7 @@
-import { Alert, RefreshControl, ScrollView, Text, View } from "react-native";
+import { Alert, BackHandler, RefreshControl, ScrollView, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SignedHeader } from "../../components/signed-header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/auth";
 import { Button } from "@/components/button";
 
@@ -23,6 +23,11 @@ export default function Painel() {
         return router.push(`/sale/${id}`)
     };
 
+    function handleOpenTables() {
+        return router.push('/tables');
+    }
+
+
     function handleLogout() {
         return Alert.alert('Logoff', 'Deseja sair?', [
             {
@@ -36,6 +41,18 @@ export default function Painel() {
             }
         ])
     };
+
+    useEffect(() => {
+        const disableBackHandler = () => {
+            return true; // Impede a ação padrão do botão de voltar
+        };
+
+        BackHandler.addEventListener('hardwareBackPress', disableBackHandler);
+
+        return () => {
+            BackHandler.removeEventListener('hardwareBackPress', disableBackHandler);
+        };
+    }, [])
 
     return (
         <>
@@ -54,7 +71,7 @@ export default function Painel() {
                             Abrir Venda
                         </Button.Text>
                     </Button>
-                    <Button>
+                    <Button onPress={() => handleOpenTables()}>
                         <Button.Text>
                             Abrir Mesas
                         </Button.Text>

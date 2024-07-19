@@ -1,19 +1,21 @@
-import { Alert, RefreshControl, ScrollView, Text, View } from "react-native";
+import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { TableCard } from "@/components/table-card";
 import { useRouter } from "expo-router";
 import { SignedHeader } from "../../../components/signed-header";
 import { api } from "../../api/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Table } from "@/DTO/TableDTO";
 import { useAuth } from "../../hooks/auth";
 import { Loading } from "@/components/loading";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import colors from "tailwindcss/colors";
 
 export default function Tables() {
     const { signOut } = useAuth();
     const router = useRouter();
 
     const [tables, setTables] = useState<Table[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
 
     function handleOpenSale(id: string, busy: string, saleId: string) {
@@ -27,17 +29,19 @@ export default function Tables() {
         }
     };
 
+    function handleGoBack() {
+        return router.back();
+    }
+
     async function handleGetTables() {
         try {
-            setLoading(true);
             const response = await api.get('/tables');
-
             setTables(response.data);
             setLoading(false);
         } catch (err) {
             console.log(err);
-            Alert.alert('Ocorreu um erro', 'Não foi possível carregar as mesas')
-        }
+            Alert.alert('Ocorreu um erro', 'Não foi possível carregar as mesas');
+        };
     };
 
     async function onRefresh() {
@@ -64,7 +68,7 @@ export default function Tables() {
 
     useEffect(() => {
         handleGetTables();
-    }, [tables, loading]);
+    }, [loading]);
 
     return (
         <>
@@ -75,11 +79,15 @@ export default function Tables() {
                     refreshing={refresh}
                     onRefresh={onRefresh} />}
             >
+                <TouchableOpacity className="flex flex-row items-center gap-3 mb-3" onPress={handleGoBack} >
+                    <Feather name="chevron-left" size={24} color={colors.zinc[900]} />
+                    <Text className="text-lg">Voltar</Text>
+                </TouchableOpacity>
                 <Text className="font-heading text-lg m-2 text-gray-500">Selecione uma mesa para começar:</Text>
 
                 <View className="flex flex-row flex-wrap gap-1 items-center justify-center">
                     {
-                        loading === false ? (<Loading />) :
+                        loading === true ? (<Loading />) :
                             (
                                 tables.length > 0 ? (
                                     tables.map((table) => (
