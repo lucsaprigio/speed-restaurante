@@ -14,8 +14,6 @@ export default function ShowSale() {
     const [saleLaunch, setSaleLaunch] = useState<ProductLaunchList[]>([]);
     const [total, setTotal] = useState(0);
 
-    console.log(id, saleId);
-
     function handleGoBack() {
         return router.back();
     };

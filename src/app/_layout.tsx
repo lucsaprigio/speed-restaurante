@@ -26,7 +26,6 @@ export default function Layout() {
 
   async function getInfo() {
     const user = await SecureStore.getItemAsync('app_user');
-    console.log(!user);
 
     if (!user) {
       return router.push('/(auth-routes)')

@@ -1,12 +1,12 @@
-import { Alert, BackHandler, RefreshControl, ScrollView, Text, View } from "react-native";
+import { Alert, BackHandler, ImageComponent, RefreshControl, ScrollView, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SignedHeader } from "../../components/signed-header";
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/auth";
-import { Button } from "@/components/button";
+import { IconButton } from "@/components/menu-button";
 
 export default function Painel() {
-    const { signOut } = useAuth();
+    const { signOut, user } = useAuth();
     const router = useRouter();
     const { id } = useLocalSearchParams();
 
@@ -25,6 +25,10 @@ export default function Painel() {
 
     function handleOpenTables() {
         return router.push('/tables');
+    }
+
+    function handleOpenMySales() {
+        return router.push(`/my-sales`);
     }
 
 
@@ -52,7 +56,7 @@ export default function Painel() {
         return () => {
             BackHandler.removeEventListener('hardwareBackPress', disableBackHandler);
         };
-    }, [])
+    }, []);
 
     return (
         <>
@@ -65,18 +69,23 @@ export default function Painel() {
             >
                 <Text className="font-heading text-lg m-2 text-gray-500">Selecione uma das opções abaixo:</Text>
 
-                <View className="flex w-full h-full p-8 gap-10 mt-3">
-                    <Button onPress={() => handleOpenSale()}>
-                        <Button.Text>
-                            Abrir Venda
-                        </Button.Text>
-                    </Button>
-                    <Button onPress={() => handleOpenTables()}>
-                        <Button.Text>
-                            Abrir Mesas
-                        </Button.Text>
-                    </Button>
-                </View >
+                <View className="flex flex-row w-full h-full p-3 gap-4 mt-3">
+                    <IconButton
+                        title="Novo pedido"
+                        iconName="add"
+                        onPress={() => handleOpenSale()}
+                    />
+                    <IconButton
+                        title="Mesas"
+                        iconName="table-bar"
+                        onPress={() => handleOpenTables()}
+                    />
+                    <IconButton
+                        title="Meus pedidos"
+                        iconName="view-agenda"
+                        onPress={() => handleOpenMySales()}
+                    />
+                </View>
             </ScrollView>
         </>
     )

@@ -28,7 +28,7 @@ export default function CloseUpdatedSale() {
         return cartStore.remove(product.CD_PRODUTO)
     }
 
-    async function handleCreateSale() {
+    async function handleUpdateSale() {
         try {
             const provider = user.userId;
 
@@ -54,7 +54,7 @@ export default function CloseUpdatedSale() {
             {
                 text: "Atualizar Pedido",
                 onPress: () => {
-                    handleCreateSale();
+                    handleUpdateSale();
                     cartStore.clear();
                     router.push('/(auth-routes)/');
                 }

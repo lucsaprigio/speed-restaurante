@@ -3,7 +3,7 @@ import { ReactNode, createContext, useContext, useEffect, useState } from 'react
 import * as SecureStore from 'expo-secure-store';
 import { Alert } from 'react-native';
 import { api } from '../api/api';
-import { useRouter, useSegments, useRootNavigationState } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 type SigninCreadentials = {
     userId: string;
@@ -31,7 +31,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     async function signIn({ userId, password }: SigninCreadentials) {
         try {
             const response = await api.post('/signin', { userId, password });
-            console.log(response.data)
 
             if (response.data.error) {
                 Alert.alert(`${response.data.error}`)
@@ -52,7 +51,6 @@ function AuthProvider({ children }: AuthProviderProps) {
             setData(response.data.user);
             router.push('/(auth-routes)/');
         } catch (error) {
-            console.log(error.message)
             if (error.message === 'Request failed with status code 402') {
                 Alert.alert('Usuário fora do horário registrado');
             } else {
