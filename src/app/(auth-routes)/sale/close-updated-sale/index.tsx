@@ -2,8 +2,8 @@ import { api } from "@/app/api/api";
 import { useAuth } from "@/app/hooks/auth";
 import { ProductCartProps, useCartStore } from "@/app/store/product-cart";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
-import { Button } from "@/components/button";
-import { ProductInCart } from "@/components/protuct-in-cart";
+import { Button } from "@/app/components/button";
+import { ProductInCart } from "@/app/components/protuct-in-cart";
 import { Feather } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ScrollView, Text } from "react-native";
@@ -33,7 +33,6 @@ export default function CloseUpdatedSale() {
             const provider = user.userId;
 
             await api.post(`/update-sale/${saleId}`, {
-                tableId: id,
                 obs: '',
                 total: (Number(totalToBackend) + Number(totalSale)),
                 userId: provider,
@@ -75,7 +74,7 @@ export default function CloseUpdatedSale() {
                 <View></View>
             </SafeAreaView>
             <ScrollView>
-                <Text className="text-lg text-center font-heading text-blue-950 mt-3">Mesa {id ? id : "não selecionada"}</Text>
+                <Text className="text-lg text-center font-heading text-blue-950 mt-3">Mesa {Number(id) > 0 ? id : "não selecionada"}</Text>
                 {
                     cartStore.products.map((item) => (
                         <ProductInCart

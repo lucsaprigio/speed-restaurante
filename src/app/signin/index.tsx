@@ -3,8 +3,8 @@ import { Alert, BackHandler, Image, RefreshControl, ScrollView, Text, View } fro
 import { useAuth } from "../hooks/auth";
 
 import { api } from "../api/api";
-import { Button } from "@/components/button";
-import { Input } from "@/components/input";
+import { Button } from "@/app/components/button";
+import { Input } from "@/app/components/input";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { UserList } from "@/DTO/UserDTO";

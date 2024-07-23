@@ -2,8 +2,8 @@ import { api } from "@/app/api/api";
 import { useAuth } from "@/app/hooks/auth";
 import { ProductCartProps, useCartStore } from "@/app/store/product-cart";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
-import { Button } from "@/components/button";
-import { ProductInCart } from "@/components/protuct-in-cart";
+import { Button } from "@/app/components/button";
+import { ProductInCart } from "@/app/components/protuct-in-cart";
 import { Feather } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ScrollView, Text } from "react-native";
@@ -19,6 +19,8 @@ export default function CloseSale() {
 
     const total = formatCurrency(cartStore.products.map(item => item.total));
     const totalToBackend = cartStore.products.map(item => item.total);
+    console.log(Number(id) > 0)
+
 
     function handleGoBack() {
         return router.back();
@@ -31,14 +33,25 @@ export default function CloseSale() {
     async function handleCreateSale() {
         try {
             const provider = user.userId;
+            console.log(!id)
 
-            await api.post('/new-sale', {
-                tableId: id,
-                obs: '',
-                total: totalToBackend,
-                userId: provider,
-                launchs: cartStore.getProductsArray()
-            });
+            if (Number(id) > 0) {
+                await api.post('/new-sale', {
+                    tableId: id,
+                    obs: '',
+                    total: totalToBackend,
+                    userId: provider,
+                    launchs: cartStore.getProductsArray()
+                });
+            } else {
+                await api.post('/new-sale', {
+                    tableId: null,
+                    obs: '',
+                    total: totalToBackend,
+                    userId: provider,
+                    launchs: cartStore.getProductsArray()
+                });
+            }
 
         } catch (err) {
             Alert.alert('Algo deu errado', 'Ocorreu um erro, Tente novamente.');
@@ -76,7 +89,7 @@ export default function CloseSale() {
                 <View></View>
             </SafeAreaView>
             <ScrollView>
-                <Text className="text-lg text-center font-heading text-blue-950 mt-3">Mesa {id && "não selecionada"}</Text>
+                <Text className="text-lg text-center font-heading text-blue-950 mt-3">Mesa {Number(id) > 0 ? id : "não selecionada"}</Text>
                 {
                     cartStore.products.map((item) => (
                         <ProductInCart

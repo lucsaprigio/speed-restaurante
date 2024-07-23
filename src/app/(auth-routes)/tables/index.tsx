@@ -1,12 +1,12 @@
 import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { TableCard } from "@/components/table-card";
+import { TableCard } from "@/app/components/table-card";
 import { useRouter } from "expo-router";
-import { SignedHeader } from "../../../components/signed-header";
+import { SignedHeader } from "../../components/signed-header";
 import { api } from "../../api/api";
 import { useCallback, useEffect, useState } from "react";
 import { Table } from "@/DTO/TableDTO";
 import { useAuth } from "../../hooks/auth";
-import { Loading } from "@/components/loading";
+import { Loading } from "@/app/components/loading";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "tailwindcss/colors";
 

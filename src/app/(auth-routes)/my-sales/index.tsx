@@ -1,6 +1,6 @@
 import { api } from "@/app/api/api";
 import { useAuth } from "@/app/hooks/auth";
-import { UserSalesCard } from "@/components/user-sales-card";
+import { UserSalesCard } from "@/app/components/user-sales-card";
 import { SaleDTO } from "@/DTO/SaleDTO";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -23,6 +23,13 @@ export default function MySales() {
 
         }
     }
+
+    function handleOpenSale(id: string, saleId: string) {
+        return router.push({
+            pathname: `/(auth-routes)/show-sale/${id}`,
+            params: { saleId }
+        })
+    };
 
     function handleGoBack() {
         return router.back();
@@ -47,6 +54,7 @@ export default function MySales() {
                 {
                     sales && sales.map((sale) => (
                         <UserSalesCard
+                            onPress={() => handleOpenSale(sale.CD_MESA, sale.CD_PEDIDO)}
                             key={sale.CD_PEDIDO}
                             saleId={sale.CD_PEDIDO}
                             tableId={sale.CD_MESA}

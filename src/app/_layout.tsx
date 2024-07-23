@@ -7,7 +7,7 @@ import {
   Roboto_500Medium,
   Roboto_700Bold
 } from '@expo-google-fonts/roboto';
-import { Loading } from "@/components/loading";
+import { Loading } from "@/app/components/loading";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { BackHandler } from "react-native";

@@ -1,6 +1,6 @@
 import { api } from "@/app/api/api";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
-import { Button } from "@/components/button";
+import { Button } from "@/app/components/button";
 import { ProductLaunchList } from "@/DTO/ProductDTO";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
@@ -48,7 +48,7 @@ export default function ShowSale() {
                         <Feather name="chevron-left" size={28} color={colors.gray[200]} />
                     </TouchableOpacity>
                     <Text className="text-gray-200">
-                        Mesa {id}
+                        Mesa {Number(id) > 0 ? id : "não selecionada"}
                     </Text>
                     <View>
                     </View>

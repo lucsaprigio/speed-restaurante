@@ -5,10 +5,10 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import colors from "tailwindcss/colors";
-import { Product } from "../../../../components/product";
-import { CategoryButton } from "../../../../components/category-button";
+import { Product } from "../../../components/product";
+import { CategoryButton } from "../../../components/category-button";
 import { useCartStore } from "@/app/store/product-cart";
-import { SaleCart } from "@/components/sale-cart";
+import { SaleCart } from "@/app/components/sale-cart";
 import { formatCurrency } from "@/app/utils/functions/formatCurrency";
 import { api } from "@/app/api/api";
 import { ProductList } from "@/DTO/ProductDTO";
@@ -84,7 +84,7 @@ export default function Sale() {
                         <Feather name="chevron-left" size={28} color={colors.gray[200]} />
                     </TouchableOpacity>
                     <Text className="text-gray-200">
-                        Mesa {id}
+                        Mesa {Number(id) > 0 ? id : "não selecionada"}
                     </Text>
                     <View>
                         <SaleCart quantity={cartStore.products.length} onPress={() => { handleUpdateSale(saleId, id) }} />
