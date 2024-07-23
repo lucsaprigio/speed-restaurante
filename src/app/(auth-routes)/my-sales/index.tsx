@@ -1,21 +1,24 @@
 import { api } from "@/app/api/api";
 import { useAuth } from "@/app/hooks/auth";
 import { UserSalesCard } from "@/components/user-sales-card";
+import { SaleDTO } from "@/DTO/SaleDTO";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useEffect } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "tailwindcss/colors";
 
 export default function MySales() {
     const { user } = useAuth();
 
+    const [sales, setSales] = useState<SaleDTO[]>([]);
+
     async function handleGetSales() {
         try {
-            const response = await api.get(`my-sales/1`);
+            const response = await api.get(`my-sales/${user.userId}`);
 
-            console.log(response.data);
+            setSales(response.data.sales);
         } catch (err) {
 
         }
@@ -40,14 +43,20 @@ export default function MySales() {
                     <View></View>
                 </SafeAreaView>
             </View>
-            <View className="p-3">
-                <UserSalesCard
-                    saleId="1"
-                    tableId="2"
-                    closed="N"
-                    total="10.00"
-                />
-            </View>
+            <ScrollView className="p-3 space-y-6">
+                {
+                    sales && sales.map((sale) => (
+                        <UserSalesCard
+                            key={sale.CD_PEDIDO}
+                            saleId={sale.CD_PEDIDO}
+                            tableId={sale.CD_MESA}
+                            closed={sale.FECHADO}
+                            total={sale.TOTAL.toFixed(2)}
+                            obs={sale.OBS}
+                        />
+                    ))
+                }
+            </ScrollView>
         </>
     )
 }
