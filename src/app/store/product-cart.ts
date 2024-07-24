@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ProductCartLaunch, ProductList } from '@/DTO/ProductDTO';
+import { ProductCartLaunch, ProductList } from '../../DTO/ProductDTO';
 
 export type ProductCartProps = ProductList & {
     quantity: number;

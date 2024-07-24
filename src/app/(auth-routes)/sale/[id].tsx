@@ -7,13 +7,12 @@ import { Feather } from "@expo/vector-icons";
 import colors from "tailwindcss/colors";
 import { Product } from "../../components/product";
 import { CategoryButton } from "../../components/category-button";
-import { useCartStore } from "@/app/store/product-cart";
-import { SaleCart } from "@/app/components/sale-cart";
-import { formatCurrency } from "@/app/utils/functions/formatCurrency";
-import { api } from "@/app/api/api";
-import { ProductList } from "@/DTO/ProductDTO";
-import { Loading } from "@/app/components/loading";
-import { Category } from "@/DTO/CategoryDTO";
+import { useCartStore } from "../../store/product-cart";
+import { SaleCart } from "../../components/sale-cart";
+import { formatCurrency } from "../../utils/functions/formatCurrency";
+import { api } from "../../api/api";
+import { ProductList } from "../../../DTO/ProductDTO";
+import { Category } from "../../../DTO/CategoryDTO";
 
 export default function Sale() {
     const router = useRouter();

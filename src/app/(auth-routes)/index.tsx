@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { SignedHeader } from "../components/signed-header";
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/auth";
-import { IconButton } from "@/app/components/menu-button";
+import { IconButton } from "../components/menu-button";
 
 export default function Painel() {
     const { signOut, user } = useAuth();

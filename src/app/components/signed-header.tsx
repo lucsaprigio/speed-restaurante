@@ -1,13 +1,13 @@
-import { formatDate } from "@/app/utils/dateFormatted";
+import { formatDate } from "../utils/dateFormatted";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, TouchableOpacityProps, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import AvatarImg from '@/assets/avatar.png';
+import AvatarImg from "../../assets/avatar.png";
 
 import colors from "tailwindcss/colors";
-import { useAuth } from "@/app/hooks/auth";
+import { useAuth } from "../hooks/auth";
 
 type SignedHeaderProps = TouchableOpacityProps & {}
 

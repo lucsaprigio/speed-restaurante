@@ -1,4 +1,4 @@
-import { User } from '@/DTO/UserDTO';
+import { User } from '../../DTO/UserDTO';
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { Alert } from 'react-native';

@@ -1,4 +1,4 @@
-import { ProductDTO } from '@/DTO/ProductDTO';
+import { ProductDTO } from '../../../DTO/ProductDTO';
 import { ProductCartProps } from '../product-cart';
 
 export function add(products: ProductCartProps[], newProduct: ProductDTO) {

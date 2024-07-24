@@ -1,7 +1,7 @@
-import { api } from "@/app/api/api";
-import { formatCurrency } from "@/app/utils/functions/formatCurrency";
-import { Button } from "@/app/components/button";
-import { ProductLaunchList } from "@/DTO/ProductDTO";
+import { api } from "../../api/api";
+import { formatCurrency } from "../../utils/functions/formatCurrency";
+import { Button } from "../../components/button";
+import { ProductLaunchList } from "../../../DTO/ProductDTO";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";

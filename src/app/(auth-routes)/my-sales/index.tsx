@@ -1,7 +1,7 @@
-import { api } from "@/app/api/api";
-import { useAuth } from "@/app/hooks/auth";
-import { UserSalesCard } from "@/app/components/user-sales-card";
-import { SaleDTO } from "@/DTO/SaleDTO";
+import { api } from "../../api/api";
+import { useAuth } from "../../hooks/auth";
+import { UserSalesCard } from "../../components/user-sales-card";
+import { SaleDTO } from "../../../DTO/SaleDTO";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";

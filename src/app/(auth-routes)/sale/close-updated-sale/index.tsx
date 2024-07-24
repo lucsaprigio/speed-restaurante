@@ -1,9 +1,9 @@
-import { api } from "@/app/api/api";
-import { useAuth } from "@/app/hooks/auth";
-import { ProductCartProps, useCartStore } from "@/app/store/product-cart";
-import { formatCurrency } from "@/app/utils/functions/formatCurrency";
-import { Button } from "@/app/components/button";
-import { ProductInCart } from "@/app/components/protuct-in-cart";
+import { api } from "../../../api/api";
+import { useAuth } from "../../../hooks/auth";
+import { ProductCartProps, useCartStore } from "../../../store/product-cart";
+import { formatCurrency } from "../../../utils/functions/formatCurrency";
+import { Button } from "../../../components/button";
+import { ProductInCart } from "../../../components/protuct-in-cart";
 import { Feather } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ScrollView, Text } from "react-native";

@@ -1,13 +1,14 @@
+import { useEffect, useState } from 'react';
+import { View, Text, Alert, KeyboardAvoidingView } from "react-native";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
 
 import { getRealm } from '../databases/realm';
-import { Button } from "@/app/components/button";
-import { Header } from "@/app/components/header";
-import { Input } from "@/app/components/input";
-import { View, Text, Alert } from "react-native";
-import { useEffect, useState } from 'react';
+import { Button } from "./components/button";
+import { Header } from "./components/header";
+import { Input } from "./components/input";
 import uuid from 'react-native-uuid';
-import * as SecureStore from 'expo-secure-store';
+import { ConfigDTO } from '@/DTO/ConfigDTO';
 
 export default function Home() {
     const router = useRouter();
@@ -15,18 +16,20 @@ export default function Home() {
     const [ipConnection, setIpConnection] = useState('');
     const [cnpj, setCnpj] = useState('');
     const [email, setEmail] = useState('');
+    const [config, setConfig] = useState<ConfigDTO[]>([]);
 
     async function handleRegister() {
         const realm = await getRealm();
 
         try {
             realm.write(() => {
-                realm.create("Config", {
+                const created = realm.create("Config", {
                     _id: uuid.v4(),
                     ipConnection,
                     cnpj,
                     email
                 });
+                console.log(created)
             });
 
             realm.close();
@@ -39,46 +42,82 @@ export default function Home() {
         }
     }
 
-    /* 
-        useEffect(() => {
-            async function getInfo() {
-                const user = await SecureStore.getItemAsync('app_user');
-    
-                if (!!user) {
-                    router.push('/(auth-routes)')
-                }
-    
-                handleRegister();
+    async function getInfo() {
+        const realm = await getRealm();
+
+        try {
+            const response = realm.objects<ConfigDTO>("Config").toJSON()
+
+            // setConfig(response)
+            console.log(config)
+            if (response.length > 0) {
+                Alert.alert("Dados Cadastrais", "")
             }
-            getInfo();
-        }, []); */
+
+        } catch {
+            Alert.alert("Ocorreu um erro!", "Não foi possível pegar os dados cadastrados.")
+        }
+    }
+
+    useEffect(() => {
+        getInfo();
+    }, []);
 
     return (
-        <>
-            <Header title="Cadastrar Aparelho" icon />
+        <GestureHandlerRootView className="flex-1">
 
-            <View className="flex items-center justify-center">
-                <Text className="text-lg m-10 text-center">
-                    Preencha os campos abaixo para continuar
-                </Text>
-            </View>
+            <KeyboardAvoidingView behavior='position' enabled >
+                <Header title="Cadastrar Aparelho" icon />
 
-            <View className="flex-1">
-                <Input title="Host" keyboardType="number-pad" />
-                <Input title="CNPJ" keyboardType="number-pad" />
-                <Input title="E-mail" keyboardType="email-address" />
-
-                <View className="mt-5 px-4">
-                    <Button onPress={handleRegister}>
-                        <Button.Text>
-                            Cadastrar
-                        </Button.Text>
-                    </Button>
+                <View className="flex items-center justify-center">
+                    <Text className="text-lg m-10 text-center">
+                        Preencha os campos abaixo para continuar
+                    </Text>
                 </View>
-                <View className="absolute bottom-0 px-2">
-                    <Text className="text-xs text-blue-950">v.1.0.0</Text>
+
+                <View>
+                    <Input
+                        title="IP:PORTA"
+                        placeholder="255.255.255.0:1000"
+                        value={ipConnection}
+                        onChangeText={setIpConnection}
+                        keyboardType="number-pad"
+                    />
+                    <Input
+                        title="CNPJ"
+                        placeholder="00.000.000/0000-00"
+                        maxLength={19}
+                        value={cnpj}
+                        onChangeText={setCnpj}
+                        keyboardType="number-pad"
+                    />
+                    <Input
+                        title="E-mail"
+                        placeholder="email@email.com"
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        autoComplete="email"
+                        autoCapitalize="none"
+                    />
+
+                    <View className="mt-5 px-4 space-y-2">
+                        <Button onPress={handleRegister}>
+                            <Button.Text>
+                                Cadastrar
+                            </Button.Text>
+                        </Button>
+                        <Button onPress={handleRegister}>
+                            <Button.Text>
+                                Limpar configurações
+                            </Button.Text>
+                        </Button>
+                    </View>
+                    <View className="absolute bottom-0 px-2">
+                        <Text className="text-xs text-blue-950">v.1.0.0</Text>
+                    </View>
                 </View>
-            </View>
-        </>
+            </KeyboardAvoidingView>
+        </GestureHandlerRootView>
     )
 } 

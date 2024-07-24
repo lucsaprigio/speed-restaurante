@@ -1,4 +1,4 @@
-import { ProductDTO } from "@/DTO/ProductDTO";
+import { ProductDTO } from "../../../DTO/ProductDTO";
 
 export type ProductProps = {
     CD_PRODUTO: string;

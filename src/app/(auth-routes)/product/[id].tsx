@@ -1,15 +1,15 @@
-import { ProductList } from "@/DTO/ProductDTO";
-import { Complement } from "@/DTO/ComplementsDTO";
-import { api } from "@/app/api/api";
-import { ProductCartProps, useCartStore } from "@/app/store/product-cart";
-import { Button } from "@/app/components/button";
+import { ProductList } from "../../../DTO/ProductDTO";
+import { Complement } from "../../../DTO/ComplementsDTO";
+import { api } from "../../api/api";
+import { ProductCartProps, useCartStore } from "../../store/product-cart";
+import { Button } from "../../components/button";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CardComplements } from "@/app/components/complement-card";
-import { CardAdditional } from "@/app/components/additional-card";
+import { CardComplements } from "../../components/complement-card";
+import { CardAdditional } from "../../components/additional-card";
 
 import colors from "tailwindcss/colors";
 
