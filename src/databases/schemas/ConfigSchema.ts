@@ -1,4 +1,6 @@
-export const ConfigSchema = {
+import { ObjectSchema } from "realm";
+
+export const ConfigSchema: ObjectSchema = {
     name: "Config",
     properties: {
         _id: "string",

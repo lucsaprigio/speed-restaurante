@@ -1,67 +1,59 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { View, Text, Alert, KeyboardAvoidingView } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
 
-import { getRealm } from '../databases/realm';
 import { Button } from "./components/button";
 import { Header } from "./components/header";
 import { Input } from "./components/input";
-import uuid from 'react-native-uuid';
-import { ConfigDTO } from '@/DTO/ConfigDTO';
+import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from './hooks/auth';
 
 export default function Home() {
+    const { saveDataApi, config, clearDataApi } = useAuth();
     const router = useRouter();
 
     const [ipConnection, setIpConnection] = useState('');
     const [cnpj, setCnpj] = useState('');
     const [email, setEmail] = useState('');
-    const [config, setConfig] = useState<ConfigDTO[]>([]);
 
     async function handleRegister() {
-        const realm = await getRealm();
-
         try {
-            realm.write(() => {
-                const created = realm.create("Config", {
-                    _id: uuid.v4(),
-                    ipConnection,
-                    cnpj,
-                    email
-                });
-                console.log(created)
-            });
-
-            realm.close();
+            saveDataApi({ ipConnection, cnpj, email });
             Alert.alert("Cadastro", "Cadastrado com sucesso!");
+            console.log(config.ipConnection);
             router.push('/signin');
         } catch (err) {
+            console.log(err);
             Alert.alert("Cadastro", "Não foi possível cadastrar!");
-        } finally {
-            realm.close();
         }
     }
 
-    async function getInfo() {
-        const realm = await getRealm();
-
+    async function handleGetInfo() {
         try {
-            const response = realm.objects<ConfigDTO>("Config").toJSON()
-
-            // setConfig(response)
-            console.log(config)
-            if (response.length > 0) {
-                Alert.alert("Dados Cadastrais", "")
+            if (!config.ipConnection) {
+                Alert.alert(
+                    'Dados cadastrais',
+                    `Encontramos dados cadastrados neste aparelho.`,
+                    [
+                        { text: "Continuar", onPress: () => router.push('/signin') }
+                    ]
+                )
             }
-
-        } catch {
+        } catch (err) {
+            console.log(err);
             Alert.alert("Ocorreu um erro!", "Não foi possível pegar os dados cadastrados.")
         }
     }
 
-    useEffect(() => {
-        getInfo();
-    }, []);
+    function handleClearConfig() {
+        return clearDataApi();
+    }
+
+    useFocusEffect(useCallback(() => {
+        handleGetInfo();
+    }, []));
+
 
     return (
         <GestureHandlerRootView className="flex-1">
@@ -78,7 +70,7 @@ export default function Home() {
                 <View>
                     <Input
                         title="IP:PORTA"
-                        placeholder="255.255.255.0:1000"
+                        placeholder="000.000.000.0:1000"
                         value={ipConnection}
                         onChangeText={setIpConnection}
                         keyboardType="number-pad"
@@ -107,7 +99,10 @@ export default function Home() {
                                 Cadastrar
                             </Button.Text>
                         </Button>
-                        <Button onPress={handleRegister}>
+                        <Button
+                            onPress={handleClearConfig}
+                            disabled={!config.ipConnection}
+                        >
                             <Button.Text>
                                 Limpar configurações
                             </Button.Text>

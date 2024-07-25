@@ -1,6 +1,8 @@
 import { User } from '../../DTO/UserDTO';
+import { ConfigDTO } from '../../DTO/ConfigDTO';
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import { MMKV } from 'react-native-mmkv';
 import { Alert } from 'react-native';
 import { api } from '../api/api';
 import { useRouter } from 'expo-router';
@@ -12,7 +14,10 @@ type SigninCreadentials = {
 
 type AuthContextData = {
     user: User | null;
+    config: ConfigDTO;
     signIn: (credentials: SigninCreadentials) => Promise<void>;
+    saveDataApi: (data: ConfigDTO) => Promise<void>;
+    clearDataApi: () => void;
     signOut: () => void;
     isLogged: boolean;
 }
@@ -22,11 +27,13 @@ type AuthProviderProps = {
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
+const dataApi = new MMKV({ id: 'config' })
 
 function AuthProvider({ children }: AuthProviderProps) {
     const router = useRouter();
 
     const [data, setData] = useState<User>({} as User);
+    const [config, setConfig] = useState<ConfigDTO>({} as ConfigDTO);
 
     async function signIn({ userId, password }: SigninCreadentials) {
         try {
@@ -72,6 +79,24 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
     }
 
+    async function saveDataApi({ cnpj, email, ipConnection }: ConfigDTO) {
+        try {
+            dataApi.set('data-api', JSON.stringify({ ipConnection, cnpj, email }));
+            console.log(cnpj, email, ipConnection)
+        } catch (err) {
+            Alert.alert(`${err}`)
+        }
+    }
+
+    function fetchDataApi() {
+        const data = dataApi.getString('data-api');
+        setConfig(data ? JSON.parse(data) : {});
+    }
+
+    function clearDataApi() {
+        return dataApi.delete('data-api');
+    }
+
     useEffect(() => {
         async function loadStorageData() {
             try {
@@ -90,7 +115,8 @@ function AuthProvider({ children }: AuthProviderProps) {
             }
         }
 
-        loadStorageData()
+        loadStorageData();
+        fetchDataApi();
     }, []);
 
     return (
@@ -98,7 +124,10 @@ function AuthProvider({ children }: AuthProviderProps) {
             user: data,
             signIn,
             signOut,
+            saveDataApi,
+            clearDataApi,
             isLogged: !!data,
+            config
         }}>
             {children}
         </AuthContext.Provider>

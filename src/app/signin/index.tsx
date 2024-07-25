@@ -8,10 +8,14 @@ import { Input } from "../components/input";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { UserList } from "../../DTO/UserDTO";
+import { MaterialIcons } from "@expo/vector-icons";
 import GarcomJpg from "../../assets/garcom.jpg";
 
+import colors from "tailwindcss/colors";
+
+
 export default function SignIn() {
-    const { signIn } = useAuth();
+    const { signIn, config } = useAuth();
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const [users, setUsers] = useState<UserList[]>([]);
@@ -30,11 +34,14 @@ export default function SignIn() {
 
     async function handleGetUsers() {
         try {
-            const response = await api.get('/users');
+            // const response = await axios.get(`${ip[0].ipConnection}/users`);
+            // console.log(`${ip[0].ipConnection}/users`)
 
-            setUsers(response.data);
-            setUserId(response.data[0].USERID);
+            // setUsers(response.data);
+            // setUserId(response.data[0].USERID);
+            console.log(config);
         } catch (err) {
+            console.log(err)
             Alert.alert('Ocorreu um erro', 'Não foi possível conectar ao servidor.')
         }
     }
@@ -71,6 +78,7 @@ export default function SignIn() {
                     </Text>
                     {/* <Feather name="user" size={34} color={colors.blue[950]} /> */}
                 </View>
+
             </SafeAreaView>
             <ScrollView
                 className="p-1"
@@ -116,6 +124,9 @@ export default function SignIn() {
                     </Button>
                 </View>
             </ScrollView>
+            <Button className="absolute bottom-3 right-3 w-14 h-14 rounded-full">
+                <MaterialIcons name="settings" size={28} color={colors.gray[50]} />
+            </Button>
         </>
     )
 }
