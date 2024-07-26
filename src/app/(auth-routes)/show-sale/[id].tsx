@@ -8,9 +8,11 @@ import { useEffect, useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "tailwindcss/colors";
+import { useAuth } from "@/app/hooks/auth";
 
 export default function ShowSale() {
     const { id, saleId } = useLocalSearchParams();
+    const { config } = useAuth();
     const [saleLaunch, setSaleLaunch] = useState<ProductLaunchList[]>([]);
     const [total, setTotal] = useState(0);
 
@@ -24,7 +26,7 @@ export default function ShowSale() {
 
     async function handleGetSale() {
         try {
-            const response = await api.get(`/sale/${saleId}`);
+            const response = await api.get(`${config.ipConnection}/sale/${saleId}`);
 
             setTotal(response.data[0].TOTAL);
             setSaleLaunch(response.data);

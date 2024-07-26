@@ -11,7 +11,7 @@ import { Feather } from "@expo/vector-icons";
 import colors from "tailwindcss/colors";
 
 export default function Tables() {
-    const { signOut } = useAuth();
+    const { signOut, config } = useAuth();
     const router = useRouter();
 
     const [tables, setTables] = useState<Table[]>([]);
@@ -35,7 +35,7 @@ export default function Tables() {
 
     async function handleGetTables() {
         try {
-            const response = await api.get('/tables');
+            const response = await api.get(`${config.ipConnection}/tables`);
             setTables(response.data);
             setLoading(false);
         } catch (err) {

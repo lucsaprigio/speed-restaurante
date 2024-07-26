@@ -13,11 +13,13 @@ import { formatCurrency } from "../../../utils/functions/formatCurrency";
 import { api } from "../../../api/api";
 import { ProductList } from "../../../../DTO/ProductDTO";
 import { Category } from "../../../../DTO/CategoryDTO";
+import { useAuth } from "@/app/hooks/auth";
 
 export default function Sale() {
     const router = useRouter();
     const cartStore = useCartStore();
     const { id, saleId, totalSale } = useLocalSearchParams();
+    const { config } = useAuth();
 
     const [category, setCategory] = useState('');
     const [categoryList, setCategoryList] = useState<Category[]>([]);
@@ -27,24 +29,17 @@ export default function Sale() {
 
     async function handleListProducts() {
         try {
-            const response = await api.get('/products');
+            const [productsResponse, categoriesResponse] = await Promise.all([
+                api.get(`${config.ipConnection}/products`),
+                api.get(`${config.ipConnection}/categories`)
+            ]);
 
-            setProductList(response.data);
+            setProductList(productsResponse.data);
+            setCategoryList(categoriesResponse.data);
         } catch (err) {
             console.log(err);
         }
     }
-
-    async function handleListCategories() {
-        try {
-            const response = await api.get('/categories');
-
-            setCategoryList(response.data);
-        } catch (err) {
-            console.log(err);
-
-        }
-    };
 
     function handleGoBack() {
         return router.back();
@@ -70,7 +65,6 @@ export default function Sale() {
     useEffect(() => {
         setFilteredProducts(productList);
         handleListProducts();
-        handleListCategories();
     }, []);
 
     return (

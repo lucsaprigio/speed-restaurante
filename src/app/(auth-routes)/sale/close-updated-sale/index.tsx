@@ -13,7 +13,7 @@ import colors from "tailwindcss/colors";
 
 export default function CloseUpdatedSale() {
     const { saleId, id, totalSale } = useLocalSearchParams();
-    const { user } = useAuth();
+    const { user, config } = useAuth();
     const cartStore = useCartStore();
     const router = useRouter();
 
@@ -32,7 +32,7 @@ export default function CloseUpdatedSale() {
         try {
             const provider = user.userId;
 
-            await api.post(`/update-sale/${saleId}`, {
+            await api.post(`${config.ipConnection}/update-sale/${saleId}`, {
                 obs: '',
                 total: (Number(totalToBackend) + Number(totalSale)),
                 userId: provider,

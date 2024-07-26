@@ -12,10 +12,12 @@ import { CardComplements } from "../../components/complement-card";
 import { CardAdditional } from "../../components/additional-card";
 
 import colors from "tailwindcss/colors";
+import { useAuth } from "@/app/hooks/auth";
 
 export default function UpdateSaleProduct() {
     const navigation = useNavigation();
     const { id } = useLocalSearchParams();
+    const { config } = useAuth();
     const cartStore = useCartStore();
 
     const [product, setProduct] = useState<ProductList>({} as ProductList);
@@ -33,8 +35,8 @@ export default function UpdateSaleProduct() {
     async function fetchProductAndComplements() {
         try {
             const [productResponse, complementResponse] = await Promise.all([
-                api.get(`/product/${id}`),
-                api.get(`/complement/${id}`)
+                api.get(`${config.ipConnection}/product/${id}`),
+                api.get(`${config.ipConnection}/complement/${id}`)
             ]);
 
             setProduct(productResponse.data.product);
@@ -47,7 +49,6 @@ export default function UpdateSaleProduct() {
 
             setComplementsFiltered(complementFilter);
             setAdditional(complementAdditional);
-
 
             const initialtotal = Number(productResponse.data.product.VR_UNITARIO) * quantity;
             setTotal(initialtotal)

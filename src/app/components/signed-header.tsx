@@ -1,5 +1,5 @@
 import { formatDate } from "../utils/dateFormatted";
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, TouchableOpacityProps, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,7 +12,7 @@ import { useAuth } from "../hooks/auth";
 type SignedHeaderProps = TouchableOpacityProps & {}
 
 export function SignedHeader({ ...rest }: SignedHeaderProps) {
-    const { user } = useAuth();
+    const { user, config } = useAuth();
 
     const [day, setDay] = useState(0);
     const [weekDay, setWeekday] = useState('');
@@ -32,6 +32,15 @@ export function SignedHeader({ ...rest }: SignedHeaderProps) {
 
     return (
         <SafeAreaView className="flex flex-row justify-between bg-blue-950 py-6 px-4 shadow-sm">
+            {
+                config.ipConnection &&
+                <View className="absolute flex flex-row gap-1 items-center justify-center left-5 top-9">
+                    <MaterialIcons name="circle" color={colors.green[500]} />
+                    <Text className="text-sm text-gray-400">
+                        Conectado ao {config.ipConnection}
+                    </Text>
+                </View>
+            }
             <View className="flex flex-row items-center justify-center">
                 <TouchableOpacity className="flex items-center p-1 m-3 rounded-full" activeOpacity={0.5}>
                     {/* <Feather name="user" size={38} color={colors.gray[100]} /> */}

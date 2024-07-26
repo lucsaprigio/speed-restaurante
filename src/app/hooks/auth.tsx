@@ -10,6 +10,7 @@ import { useRouter } from 'expo-router';
 type SigninCreadentials = {
     userId: string;
     password: string;
+    ipConnection: string;
 }
 
 type AuthContextData = {
@@ -35,18 +36,23 @@ function AuthProvider({ children }: AuthProviderProps) {
     const [data, setData] = useState<User>({} as User);
     const [config, setConfig] = useState<ConfigDTO>({} as ConfigDTO);
 
-    async function signIn({ userId, password }: SigninCreadentials) {
+    async function signIn({ userId, password, ipConnection }: SigninCreadentials) {
         try {
-            const response = await api.post('/signin', { userId, password });
+            const [response, session] = await Promise.all([
+                api.post(`${ipConnection}/signin`, { userId, password }),
+                api.post(`${ipConnection}/session/${userId}`)
+            ]);
+
+            // const response = await api.post(`${ipConnection}/signin`, { userId, password });
 
             if (response.data.error) {
                 Alert.alert(`${response.data.error}`)
             }
 
-            const userSession = await api.post(`/session/${userId}`);
+            // const userSession = await api.post(`${ipConnection}/session/${userId}`);
 
-            if (userSession.data.error) {
-                Alert.alert(`${userSession.data.error}`);
+            if (session.data.error) {
+                Alert.alert(`${session.data.error}`);
             }
 
             api.defaults.headers.common[
@@ -82,7 +88,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     async function saveDataApi({ cnpj, email, ipConnection }: ConfigDTO) {
         try {
             dataApi.set('data-api', JSON.stringify({ ipConnection, cnpj, email }));
-            console.log(cnpj, email, ipConnection)
         } catch (err) {
             Alert.alert(`${err}`)
         }

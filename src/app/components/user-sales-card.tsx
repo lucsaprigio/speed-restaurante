@@ -8,9 +8,10 @@ type UserSalesProps = TouchableOpacityProps & {
     closed: string;
     tableId?: string;
     obs?: string;
+    created_at: string;
 }
 
-export function UserSalesCard({ closed, saleId, total, tableId, obs, ...rest }: UserSalesProps) {
+export function UserSalesCard({ closed, saleId, total, tableId, obs, created_at, ...rest }: UserSalesProps) {
     return (
         <TouchableOpacity
             className="flex flex-row items-start justify-start w-full rounded-md p-5 bg-gray-200 space-y-3 border-r-8 border-green-600"
@@ -32,6 +33,9 @@ export function UserSalesCard({ closed, saleId, total, tableId, obs, ...rest }: 
                     <Text className="text-gray-600">Observações:</Text>
                     <Text className="text-gray-600">{obs ? obs : "Sem observação"}</Text>
                     <Text className="text-lg text-green-700 font-bold">Total: R$ {total}</Text>
+                    <Text className="opacity-50">
+                        Pedido realizado às {created_at}
+                    </Text>
                 </View>
             </View>
         </TouchableOpacity>

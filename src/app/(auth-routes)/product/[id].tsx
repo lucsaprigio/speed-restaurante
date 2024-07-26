@@ -12,9 +12,11 @@ import { CardComplements } from "../../components/complement-card";
 import { CardAdditional } from "../../components/additional-card";
 
 import colors from "tailwindcss/colors";
+import { useAuth } from "@/app/hooks/auth";
 
 export default function Product() {
     const navigation = useNavigation();
+    const { config } = useAuth();
     const { id } = useLocalSearchParams();
     const cartStore = useCartStore();
 
@@ -33,8 +35,8 @@ export default function Product() {
     async function fetchProductAndComplements() {
         try {
             const [productResponse, complementResponse] = await Promise.all([
-                api.get(`/product/${id}`),
-                api.get(`/complement/${id}`)
+                api.get(`${config.ipConnection}/product/${id}`),
+                api.get(`${config.ipConnection}/complement/${id}`)
             ]);
 
             setProduct(productResponse.data.product);

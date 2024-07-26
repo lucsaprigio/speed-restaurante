@@ -5,4 +5,5 @@ export interface SaleDTO {
     FECHADO: string;
     OBS: string;
     TOTAL: number;
+    DTA_TRANS: string;
 }

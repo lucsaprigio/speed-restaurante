@@ -13,7 +13,7 @@ import colors from "tailwindcss/colors";
 
 export default function CloseSale() {
     const { id } = useLocalSearchParams();
-    const { user } = useAuth();
+    const { user, config } = useAuth();
     const cartStore = useCartStore();
     const router = useRouter();
 
@@ -36,7 +36,7 @@ export default function CloseSale() {
             console.log(!id)
 
             if (Number(id) > 0) {
-                await api.post('/new-sale', {
+                await api.post(`${config.ipConnection}/new-sale`, {
                     tableId: id,
                     obs: '',
                     total: totalToBackend,
@@ -44,7 +44,7 @@ export default function CloseSale() {
                     launchs: cartStore.getProductsArray()
                 });
             } else {
-                await api.post('/new-sale', {
+                await api.post(`${config.ipConnection}/new-sale`, {
                     tableId: null,
                     obs: '',
                     total: totalToBackend,

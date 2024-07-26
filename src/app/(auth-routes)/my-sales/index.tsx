@@ -5,22 +5,23 @@ import { SaleDTO } from "../../../DTO/SaleDTO";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { format } from 'date-fns';
 import colors from "tailwindcss/colors";
 
 export default function MySales() {
-    const { user } = useAuth();
+    const { user, config } = useAuth();
 
     const [sales, setSales] = useState<SaleDTO[]>([]);
 
     async function handleGetSales() {
         try {
-            const response = await api.get(`my-sales/${user.userId}`);
+            const response = await api.get(`${config.ipConnection}/my-sales/${user.userId}`);
 
             setSales(response.data.sales);
         } catch (err) {
-
+            Alert.alert('Ocorreu um erro inesperado ❌', `${err}`);
         }
     }
 
@@ -61,6 +62,7 @@ export default function MySales() {
                             closed={sale.FECHADO}
                             total={sale.TOTAL.toFixed(2)}
                             obs={sale.OBS}
+                            created_at={format(new Date(sale.DTA_TRANS), 'HH:mm - dd/MM/yyyy')}
                         />
                     ))
                 }

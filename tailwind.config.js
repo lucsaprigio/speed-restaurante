@@ -14,7 +14,10 @@ module.exports = {
     },
   },
   colors: {
-    background: '#E1E1E6',
+    background: {
+      primary: '#E1E1E6'
+    },
+    blackshadow: 'rgba(0,0,0, 0.8)',
     primary: {
       700: '#92A0AD'
     },
@@ -28,6 +31,9 @@ module.exports = {
       300: '#758F99',
       200: '#90A4B0',
       100: '#EEF4ED'
+    },
+    zinc: {
+      700: 'rgba(0,0,0, 0.8)'
     },
     gray: {
       700: '#121214',
