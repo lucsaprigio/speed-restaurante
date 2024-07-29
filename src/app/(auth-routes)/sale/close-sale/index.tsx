@@ -12,15 +12,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "tailwindcss/colors";
 
 export default function CloseSale() {
-    const { id } = useLocalSearchParams();
+    const { id, saleId } = useLocalSearchParams();
     const { user, config } = useAuth();
     const cartStore = useCartStore();
     const router = useRouter();
 
-    const total = formatCurrency(cartStore.products.map(item => item.total));
-    const totalToBackend = cartStore.products.map(item => item.total);
-    console.log(Number(id) > 0)
-
+    const total = formatCurrency(cartStore.products.reduce((total, product) => total + product.VR_UNITARIO * product.quantity, 0));
+    const totalToBackend = cartStore.products.reduce((total, product) => total + product.VR_UNITARIO * product.quantity, 0);
 
     function handleGoBack() {
         return router.back();
@@ -33,7 +31,6 @@ export default function CloseSale() {
     async function handleCreateSale() {
         try {
             const provider = user.userId;
-            console.log(!id)
 
             if (Number(id) > 0) {
                 await api.post(`${config.ipConnection}/new-sale`, {
@@ -53,6 +50,23 @@ export default function CloseSale() {
                 });
             }
 
+
+            const cartToText = cartStore.getProductsArray().map((item) => [
+                item.productDescription, '   ',
+                'Qtd. ' + item.quantity, '   ',
+                formatCurrency(item.totalProduct), '   ', '\n',
+                item.obsProduct, '\n',
+            ]);
+
+            const formattedCartToText = cartToText.map(row => row.join('')).join('\n');
+
+            const text = `\nPEDIDO Nº 1\nMESA      1 \n${formattedCartToText}\nTOTAL\n${total}\n
+            \n
+        `;
+
+            await api.post(`${config.ipConnection}/print-sale`, { saleDetails: text });
+
+            cartStore.clear();
         } catch (err) {
             Alert.alert('Algo deu errado', 'Ocorreu um erro, Tente novamente.');
             console.log(err);
@@ -67,9 +81,7 @@ export default function CloseSale() {
             {
                 text: "Fechar Pedido",
                 onPress: () => {
-                    // Aqui vai as funções da rota que vou criar
                     handleCreateSale();
-                    cartStore.clear();
                     router.push('/(auth-routes)/');
                 }
             }

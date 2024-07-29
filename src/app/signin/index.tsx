@@ -39,8 +39,6 @@ export default function SignIn() {
 
     function handleUpdateConection() {
         try {
-            saveDataApi({ ipConnection: ip, cnpj, email });
-
             Alert.alert("Atualizar dados ⚠", "Você estará atualizando os dados de conexão, deseja continuar?", [
                 {
                     text: "Não",
@@ -48,7 +46,7 @@ export default function SignIn() {
                 },
                 {
                     text: "Alterar",
-                    onPress: () => { setShowModal(false) }
+                    onPress: () => { setShowModal(false), saveDataApi({ ipConnection: ip, cnpj, email }); }
                 }
             ])
         } catch (err) {
