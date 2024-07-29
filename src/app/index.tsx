@@ -31,12 +31,13 @@ export default function Home() {
 
     async function handleGetInfo() {
         try {
-            if (!config.ipConnection) {
+            console.log(config.ipConnection);
+            if (config.ipConnection !== undefined) {
                 Alert.alert(
                     'Dados cadastrais',
                     `Encontramos dados cadastrados neste aparelho.`,
                     [
-                        { text: "Continuar", onPress: () => router.push('/signin') }
+                        { text: "Continuar", /* onPress: () => router.push('/signin') */ }
                     ]
                 )
             }
@@ -52,7 +53,7 @@ export default function Home() {
 
     useFocusEffect(useCallback(() => {
         handleGetInfo();
-    }, []));
+    }, [config]));
 
 
     return (

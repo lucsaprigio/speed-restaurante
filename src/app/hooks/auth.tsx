@@ -87,7 +87,13 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     async function saveDataApi({ cnpj, email, ipConnection }: ConfigDTO) {
         try {
-            dataApi.set('data-api', JSON.stringify({ ipConnection, cnpj, email }));
+            const data = JSON.stringify({ ipConnection, cnpj, email });
+            dataApi.set('data-api', data);
+
+            // Assumindo que você tem um estado chamado config e uma função setConfig para atualizá-lo
+            const storedData = dataApi.getString('data-api'); // ou como quer que você esteja recuperando o dado
+            const config = storedData ? JSON.parse(storedData) : {};
+            setConfig(config);
         } catch (err) {
             Alert.alert(`${err}`)
         }
