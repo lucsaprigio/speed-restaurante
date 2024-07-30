@@ -53,7 +53,7 @@ export default function MySales() {
             </View>
             <ScrollView className="p-3 space-y-6">
                 {
-                    sales && sales.map((sale) => (
+                    sales.length > 0 ? (sales.map((sale) => (
                         <UserSalesCard
                             onPress={() => handleOpenSale(sale.CD_MESA, sale.CD_PEDIDO)}
                             key={sale.CD_PEDIDO}
@@ -64,7 +64,11 @@ export default function MySales() {
                             obs={sale.OBS}
                             created_at={format(new Date(sale.DTA_TRANS), 'HH:mm - dd/MM/yyyy')}
                         />
-                    ))
+                    ))) : (
+                        <View className="flex-1 items-center justify-center mt-10">
+                            <Text className="text-2xl text-gray-500 text-center">Não foram encontrados pedidos em aberto</Text>
+                        </View>
+                    )
                 }
             </ScrollView>
         </>

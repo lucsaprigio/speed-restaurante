@@ -34,10 +34,10 @@ export function SignedHeader({ ...rest }: SignedHeaderProps) {
         <SafeAreaView className="flex flex-row justify-between bg-blue-950 py-6 px-4 shadow-sm">
             {
                 config.ipConnection &&
-                <View className="absolute flex flex-row gap-1 items-center justify-center left-5 top-9">
+                <View className="absolute flex flex-row gap-1 items-center justify-center left-36 top-9">
                     <MaterialIcons name="circle" color={colors.green[500]} />
                     <Text className="text-sm text-gray-400">
-                        Conectado ao {config.ipConnection}
+                        Conectado
                     </Text>
                 </View>
             }

@@ -46,7 +46,7 @@ export default function SignIn() {
                 },
                 {
                     text: "Alterar",
-                    onPress: () => { setShowModal(false), saveDataApi({ ipConnection: ip, cnpj, email }); }
+                    onPress: () => { setShowModal(false), saveDataApi({ ipConnection: `${ip}:8082`, cnpj, email }); }
                 }
             ])
         } catch (err) {
@@ -97,7 +97,7 @@ export default function SignIn() {
                     <View className="flex items-center justify-center bg-gray-200 rounded-md p-10">
                         <Text className="text-lg font-bold text-blue-950 p-3">Configurações de conexão</Text>
                         <Input
-                            title="Endereço IP/Porta"
+                            title="Endereço IP (Servidor)"
                             value={ip}
                             onChangeText={setIp}
                         />

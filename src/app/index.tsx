@@ -8,6 +8,7 @@ import { Header } from "./components/header";
 import { Input } from "./components/input";
 import { useFocusEffect } from '@react-navigation/native';
 import { useAuth } from './hooks/auth';
+import { TextMaskInput } from './components/input-mask';
 
 export default function Home() {
     const { saveDataApi, config, clearDataApi } = useAuth();
@@ -19,7 +20,7 @@ export default function Home() {
 
     async function handleRegister() {
         try {
-            saveDataApi({ ipConnection, cnpj, email });
+            saveDataApi({ ipConnection: `${ipConnection}:8082`, cnpj: cnpj.replaceAll(/[./-]/g, ""), email });
             Alert.alert("Cadastro", "Cadastrado com sucesso!");
             console.log(config.ipConnection);
             router.push('/signin');
@@ -37,7 +38,7 @@ export default function Home() {
                     'Dados cadastrais',
                     `Encontramos dados cadastrados neste aparelho.`,
                     [
-                        { text: "Continuar", /* onPress: () => router.push('/signin') */ }
+                        { text: "Continuar",  onPress: () => router.push('/signin')  }
                     ]
                 )
             }
@@ -70,19 +71,20 @@ export default function Home() {
 
                 <View>
                     <Input
-                        title="IP:PORTA"
-                        placeholder="000.000.000.0:1000"
+                        title="Endereço IP (Servidor)"
+                        placeholder="000.000.000.000"
                         value={ipConnection}
                         onChangeText={setIpConnection}
                         keyboardType="number-pad"
                     />
-                    <Input
+                    <TextMaskInput
                         title="CNPJ"
                         placeholder="00.000.000/0000-00"
                         maxLength={19}
                         value={cnpj}
                         onChangeText={setCnpj}
                         keyboardType="number-pad"
+                        mask='99.999.999/9999-99'
                     />
                     <Input
                         title="E-mail"

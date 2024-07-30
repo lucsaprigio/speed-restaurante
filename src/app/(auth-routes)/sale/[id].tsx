@@ -35,7 +35,7 @@ export default function Sale() {
                 api.get(`${config.ipConnection}/categories`)
             ]);
 
-            setProductList(productsResponse.data);
+            setProductList(productsResponse.data.products);
             setCategoryList(categoriesResponse.data);
         } catch (err) {
             console.log(err);
@@ -53,7 +53,7 @@ export default function Sale() {
     function handleCategorySelect(selectedCategory: string) {
         setCategory(selectedCategory);
 
-        const productsFiltered = productList.filter(product => selectedCategory === product.DESCRICAO_PRODUTO);
+        const productsFiltered = productList.filter(product => selectedCategory === product.DESCRICAO_CATEGORIA);
 
         setFilteredProducts(productsFiltered);
     };
@@ -122,7 +122,7 @@ export default function Sale() {
             <Text className="mx-5 border-b-[1px] text-gray-400 border-gray-400">Produtos</Text>
             <FlatList
                 className="flex-1 p-5"
-                data={filteredProducts && productList}
+                data={filteredProducts}
                 keyExtractor={(product) => product.CD_PRODUTO}
                 renderItem={(product) => {
                     const productInCart = cartStore.products.find(cartItem => cartItem.CD_PRODUTO === product.item.CD_PRODUTO);
